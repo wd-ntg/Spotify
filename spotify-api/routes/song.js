@@ -87,7 +87,9 @@ router.post(
 
       const user = await User.findOne({ _id: userId });
       if (user.likedSongs.includes(songId)) {
-        return res.status(400).json({ error: "Song already exists in liked songs list" });
+        return res
+          .status(400)
+          .json({ error: "Song already exists in liked songs list" });
       }
 
       const updatedUser = await User.findOneAndUpdate(
@@ -95,7 +97,7 @@ router.post(
         { $push: { likedSongs: songId } },
         { new: true }
       );
-      
+
       return res.status(200).json(updatedUser);
     } catch (err) {
       return res.status(500).json({ error: "Internal server error" });
@@ -110,10 +112,25 @@ router.get(
     try {
       const userId = req.user._id;
 
+      const UserData = await User.findOne({ _id: userId });
 
-      const UserData = await User.findOne({_id: userId})
+      return res.status(200).json({ data: UserData });
+    } catch (err) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
 
-      return res.status(200).json({data: UserData});
+router.get(
+  "/get/likedSongs/fromUser",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const userId = req.user._id;
+
+      const UserData = await User.findOne({ _id: userId }).populate("likedSongs");
+
+      return res.status(200).json({ data: UserData });
     } catch (err) {
       return res.status(500).json({ error: "Internal server error" });
     }

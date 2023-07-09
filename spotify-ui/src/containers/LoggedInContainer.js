@@ -234,7 +234,7 @@ export default function LoggedInContainer({
                     title="Bộ sưu tập"
                     targetLink="/likedSongs"
                     active={true}
-                    currentActiveScreen={currentActiveScreen === "likedsongs"}
+                    currentActiveScreen={currentActiveScreen === "likedSongs"}
                   />
                 </div>
 

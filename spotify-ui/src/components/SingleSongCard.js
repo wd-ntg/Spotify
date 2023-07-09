@@ -10,7 +10,7 @@ export default function SingleSongCard({ info, playSound, index }) {
   const { currentSong, setCurrentSong, soundPlayed } = useContext(songContext);
   const [activeCurrentTextSong, setActiveCurrentTextSong] = useState(false);
   const [songs, setSongs] = useState([]);
-  const [likedSong, setLikedSong] = useState(null);
+  const [likedSong, setLikedSong] = useState([]);
 
   const handleLikedSong = async (songId) => {
     const request = await makeUnauthenticatedPOSTRequest2(
@@ -20,6 +20,7 @@ export default function SingleSongCard({ info, playSound, index }) {
       }
     );
   };
+  
   useEffect(() => {
     const getData = async () => {
       const response = await makeUnauthenticatedGetMySongRequest(
@@ -28,7 +29,6 @@ export default function SingleSongCard({ info, playSound, index }) {
       const likedSongIds = response.data.likedSongs.map((item) => item);
       setLikedSong(likedSongIds.includes(info._id));
     };
-
     getData();
   }, [likedSong]);
   const [heart, setHeart] = useState(false);
