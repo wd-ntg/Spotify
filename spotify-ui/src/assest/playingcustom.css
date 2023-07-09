@@ -1,0 +1,100 @@
+/* Tùy chỉnh giao diện thanh nghe nhạc */
+.custom-audio-player {
+    /* background-color: #1e2125; */
+    padding: 4px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+  }
+  
+  .rhap_main {
+    width: 80%;
+  }
+
+  .custom-audio-player .rhap_container {
+    background-color: rgba(0,0,0,2)  !important;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_main-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_main-controls button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    outline: none;
+    color: white;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_main-controls button:hover {
+    color: #ffffff;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_progress-container {
+  }
+  
+  .custom-audio-player .rhap_container .rhap_progress-bar {
+    background-color: black;
+    height: 4px;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_progress-filled {
+    background-color: #1db954;
+    height: 100%;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_time {
+    display: flex;
+    justify-content: space-between;
+    color: #b3b3b3;
+    font-size: 12px;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_volume-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_volume-controls button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    outline: none;
+    color: white;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_volume-controls button:hover {
+    color: #ffffff;
+  }
+
+  .custom-audio-player .rhap_container .rhap_volume-controls {
+    transform: translateX(316px);
+  }
+  
+  .custom-audio-player .rhap_container .rhap_volume-bar {
+    background-color: white;
+    height: 4px;
+  }
+  
+  .custom-audio-player .rhap_container .rhap_volume-filled {
+    background-color: #1db954;
+    height: 100%;
+  }
+
+  .custom-audio-player .rhap_progress-section {
+    width: 540px;
+    transform: translateX(212px);
+  }
+
+  .rhap_button-clear {
+    color: white;
+  }
