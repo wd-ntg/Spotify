@@ -110,7 +110,7 @@ export default function SingleSongCard({
           </div>
         </div>
       </div>
-      <div className="w-[25%]  items-center flex text-stone-300">
+      <div className="w-[30%]  items-center flex text-stone-300">
         <div className="text-stone-300">{info.name}</div>
       </div>
       <div className="flex w-[25%] justify-center items-center text-stone-300">

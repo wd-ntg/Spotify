@@ -274,7 +274,7 @@ export default function SinglePlaylistView() {
           <div className="w-[35%] text-left">Tiêu đề</div>
           <div className="w-[30%] text-left">Album</div>
           <div className="w-[25%]">Ngày thêm</div>
-          <div className="w-[8%]">
+          <div className="w-[8%] flex justify-center items-center translate-x-1">
             <i class="fa-regular fa-clock"></i>
           </div>
         </div>
