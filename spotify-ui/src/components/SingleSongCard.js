@@ -6,7 +6,12 @@ import {
   makeUnauthenticatedPOSTRequest2,
 } from "../utils/serverHelpers";
 
-export default function SingleSongCard({ info, playSound, index }) {
+export default function SingleSongCard({
+  info,
+  playSound,
+  index,
+  deleteLikedSong,
+}) {
   const { currentSong, setCurrentSong, soundPlayed } = useContext(songContext);
   const [activeCurrentTextSong, setActiveCurrentTextSong] = useState(false);
   const [songs, setSongs] = useState([]);
@@ -20,17 +25,25 @@ export default function SingleSongCard({ info, playSound, index }) {
       }
     );
   };
-  
+
+  const handleDeleteLikedSong = async (likedSongId) => {
+    const deleteLikedSong = await makeUnauthenticatedPOSTRequest2(
+      "/song/delete/likedSong",
+      { likedSongId: likedSongId }
+    );
+  };
+
   useEffect(() => {
     const getData = async () => {
       const response = await makeUnauthenticatedGetMySongRequest(
-        "/song/get/likedSongs"
+        "/song/get/user"
       );
       const likedSongIds = response.data.likedSongs.map((item) => item);
       setLikedSong(likedSongIds.includes(info._id));
     };
     getData();
-  }, [likedSong]);
+  }, []);
+
   const [heart, setHeart] = useState(false);
 
   const song = new Howl({
@@ -97,7 +110,7 @@ export default function SingleSongCard({ info, playSound, index }) {
           </div>
         </div>
       </div>
-      <div className="w-[30%]  items-center flex text-stone-300">
+      <div className="w-[25%]  items-center flex text-stone-300">
         <div className="text-stone-300">{info.name}</div>
       </div>
       <div className="flex w-[25%] justify-center items-center text-stone-300">
@@ -108,6 +121,7 @@ export default function SingleSongCard({ info, playSound, index }) {
               class={`fa-regular fa-heart ${likedSong ? "text-green-500" : ""}`}
               onClick={() => {
                 handleLikedSong(info._id);
+                setLikedSong(true)
               }}
             ></i>
           </div>
@@ -118,6 +132,18 @@ export default function SingleSongCard({ info, playSound, index }) {
       <div className="flex w-[8%] items-center justify-center text-stone-300">
         {formatTime(Math.floor(song.duration()))}
       </div>
+      {deleteLikedSong ? (
+        <div className="w-[5%] flex justify-center items-center ">
+          <button
+            className="border-[1px] border-green-300 text-white px-2 py-1 rounded-xl hover:bg-green-400 z-20"
+            onClick={() => {handleDeleteLikedSong(info._id)}}
+          >
+            Xóa
+          </button>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

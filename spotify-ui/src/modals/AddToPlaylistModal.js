@@ -4,6 +4,8 @@ import { makeUnauthenticatedGetMySongRequest } from "../utils/serverHelpers";
 
 export default function AddToPlaylistModal({ closeModal, addSongToPlaylist }) {
   const [myPlaylists, setMyPlaylists] = useState([]);
+  const [songsPlaylist, setSongPlaylist] = useState([])
+  const [notice, setNotice] = useState(false)
   useEffect(() => {
     const getData = async () => {
       const response = await makeUnauthenticatedGetMySongRequest(
@@ -13,6 +15,7 @@ export default function AddToPlaylistModal({ closeModal, addSongToPlaylist }) {
     };
     getData();
   }, []);
+
   return (
     <div>
       {" "}

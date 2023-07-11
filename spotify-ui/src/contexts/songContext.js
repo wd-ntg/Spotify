@@ -13,6 +13,10 @@ const songContext = createContext({
     setTimeSongSeek: (timeSongSeek) => {},
     // likedSong: null,
     // setLikedSong: (likedSong) => {}
+    likedPlaylist: null,
+    setLikedPlaylist: (likedPlaylist) => {},
+    volumnChange: null,
+    setVolumnChange: (volumnChange) => {}
 })
 
 export default songContext

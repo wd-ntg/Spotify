@@ -42,7 +42,7 @@ export default function CreatePlaylistModal({ closeModal }) {
           value={playlistThumbnail}
           setValue={setPlaylistThumbnail}
         />
-        <button className="border-solid border-[1px] border-slate-400  text-slate-700 px-2 rounded-xl font-semibold mt-4 bg-white hover:bg-green-400 hover:text-white hover:border-violet-100" onClick={createPlaylist}>
+        <button className="border-solid border-[1px] border-slate-400  text-slate-700 px-2 rounded-xl font-semibold mt-4 bg-white hover:bg-green-400 hover:text-white hover:border-violet-100" onClick={() => {createPlaylist()}}>
           Hoàn thành
         </button>
       </div>

@@ -12,7 +12,6 @@ router.post(
   async (req, res) => {
     try {
       const { name, thumbnail, track, genreArraySong } = req.body;
-      console.log(req.body);
       if (!name || !thumbnail || !track) {
         return res
           .status(301)
@@ -106,7 +105,7 @@ router.post(
 );
 
 router.get(
-  "/get/likedSongs",
+  "/get/user",
   passport.authenticate("jwt", { session: false }),
   async (req, res) => {
     try {
@@ -128,10 +127,37 @@ router.get(
     try {
       const userId = req.user._id;
 
-      const UserData = await User.findOne({ _id: userId }).populate("likedSongs");
+      const UserData = await User.findOne({ _id: userId }).populate({
+        path: "likedSongs",
+        populate: {
+          path: "artist",
+        },
+      });
 
       return res.status(200).json({ data: UserData });
     } catch (err) {
+      return res.status(500).json({ error: "Internal server error" });
+    }
+  }
+);
+
+router.post(
+  "/delete/likedSong",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const userId = req.user._id;
+
+    const likedSongId = req.body.likedSongId
+    
+
+    const deleteLikedSongUserData = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { likedSongs: likedSongId } },
+      { new: true }
+    );
+    return res.redirect("/likedSongs")
+    } catch(err) {
       return res.status(500).json({ error: "Internal server error" });
     }
   }

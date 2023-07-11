@@ -25,6 +25,10 @@ function App() {
   const [songProgress, setSongProgress] = useState(null)
   const [timeSongSeek, setTimeSongSeek] = useState(null)
   // const [likedSong, setLikedSong] = useState(null);
+  const [likedPlaylist, setLikedPlaylist] = useState(false)
+  const [volumnChange, setVolumnChange] = useState(100)
+
+
   return (
     <BrowserRouter>
       <div className="App">
@@ -43,7 +47,11 @@ function App() {
               timeSongSeek,
               setTimeSongSeek,
               // likedSong,
-              // setLikedSong
+              // setLikedSong,
+              likedPlaylist,
+              setLikedPlaylist,
+              volumnChange,
+              setVolumnChange
             }}
           >
             <Routes>

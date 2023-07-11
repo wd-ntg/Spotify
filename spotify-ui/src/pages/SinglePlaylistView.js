@@ -1,15 +1,46 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useFetcher, useNavigate, useParams } from "react-router-dom";
 import LoggedInContainer from "../containers/LoggedInContainer";
-import { makeUnauthenticatedGetMySongRequest } from "../utils/serverHelpers";
+import {
+  makeUnauthenticatedGetMySongRequest,
+  makeUnauthenticatedPOSTRequest2,
+} from "../utils/serverHelpers";
 import SingleSongCard from "../components/SingleSongCard";
 import { Link } from "react-router-dom";
 import songContext from "../contexts/songContext";
+import { Howl } from "howler";
 
 export default function SinglePlaylistView() {
+  const { playSound, isPaused, likedPlaylist, setLikedPlaylist } =
+    useContext(songContext);
+
   const navigate = useNavigate();
   const [playlistDetails, setPlaylistDetails] = useState({});
+  const [openDetailModal, setOpenDetailModal] = useState(false);
+
+  const [timeAllSongs, setTimeAllSongs] = useState(null);
+
+  const [quantitySong, setQuantitySong] = useState(null);
+
   const { playlistId } = useParams();
+  // const [likedPlaylist, setLikedPlaylist] = useState(false);
+
+  const handleDeleteLikedSong = async (likedPlaylistId) => {
+    const deleteLikedSong = await makeUnauthenticatedPOSTRequest2(
+      "/playlists/delete/likedPlaylist",
+      { likedPlaylistId: likedPlaylistId }
+    );
+  };
+
+  const handleLikedPlaylist = async (playlistId) => {
+    const request = await makeUnauthenticatedPOSTRequest2(
+      "/playlists/update/likedPlaylist",
+      {
+        playlistId: playlistId,
+      }
+    );
+  };
+
   useEffect(() => {
     const getData = async () => {
       const response = await makeUnauthenticatedGetMySongRequest(
@@ -19,6 +50,17 @@ export default function SinglePlaylistView() {
     };
     getData();
   }, []);
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await makeUnauthenticatedGetMySongRequest(
+        "/song/get/user"
+      );
+      const likedSongIds = response.data.likedPlaylists.map((item) => item);
+      setLikedPlaylist(likedSongIds.includes(playlistId));
+    };
+    getData();
+  }, [playlistDetails]);
 
   // Effect Scroll
   const [isSticky, setIsSticky] = useState(false);
@@ -33,8 +75,30 @@ export default function SinglePlaylistView() {
     }
   };
 
-  const { playSound, isPaused } = useContext(songContext);
+  useEffect(() => {
+    const getTimeSongs = async () => {
+      if (playlistDetails && playlistDetails.songs) {
+        const songDetails = await playlistDetails.songs.map((item) => item);
 
+        const totalDuration = songDetails.reduce((total, song) => {
+          const timeSong = new Howl({
+            src: song.track,
+          });
+          return total + timeSong.duration();
+        }, 0);
+
+        setTimeAllSongs(totalDuration);
+
+        setQuantitySong(playlistDetails.songs.length);
+      }
+    };
+
+    getTimeSongs();
+  }, [playlistDetails]);
+
+  const hours = Math.floor(timeAllSongs / 3600);
+  const minutes = Math.floor((timeAllSongs % 3600) / 60);
+  const seconds = Math.floor(timeAllSongs % 60);
 
   return (
     <LoggedInContainer
@@ -116,8 +180,16 @@ export default function SinglePlaylistView() {
                 <div>... Liked</div>
                 <div className="w-2 h-2 bg-white rounded-[50%] mx-2"></div>
 
-                <div>... Songs, about </div>
-                <div>... hour</div>
+                <div className="mr-1">{quantitySong}</div>
+                <div>
+                  Bài hát<t></t>,{" "}
+                </div>
+                <div className="mx-1">{hours}</div>
+                <div className="mr-1">giờ</div>
+                <div className="mr-1">{minutes} </div>
+                <div className="mr-1">phút</div>
+                <div className="mr-1"> {seconds} </div>
+                <div className="mr-1">giây</div>
               </div>
             </div>
           </div>
@@ -140,12 +212,58 @@ export default function SinglePlaylistView() {
               ></iconify-icon>
             )}
           </div>
-          <div className="text-slate-300 mx-8 hover:text-white">
+          <div
+            className={`${
+              likedPlaylist ? "text-green-400" : "text-slate-300"
+            } mx-8 hover:text-white cursor-pointer`}
+            onClick={() => {
+              handleLikedPlaylist(playlistId);
+              setLikedPlaylist(true);
+            }}
+          >
             <iconify-icon icon="mdi:heart-outline" width="46px"></iconify-icon>
           </div>
-          <div className="w-1 h-1 bg-white rounded-[50%]"></div>
-          <div className="w-1 h-1 bg-white rounded-[50%] mx-1"></div>
-          <div className="w-1 h-1 bg-white rounded-[50%]"></div>
+          <div
+            className="cursor-pointer flex relative"
+            onClick={() => {
+              setOpenDetailModal(true);
+            }}
+          >
+            <div className="w-1 h-1 bg-white rounded-[50%]"></div>
+            <div className="w-1 h-1 bg-white rounded-[50%] mx-1"></div>
+            <div className="w-1 h-1 bg-white rounded-[50%]"></div>
+          </div>
+          {openDetailModal ? (
+            <div
+              className="absolute top-0 left-0 right-0 bottom-0"
+              onClick={() => {
+                setOpenDetailModal(false);
+              }}
+            >
+              <div className="text-white bg-neutral-800 px-5 py-2 rounded-md absolute top-[40%] left-[19%]">
+                <div className="cursor-pointer hover:text-green-400 my-2">
+                  Báo cáo
+                </div>
+                <div className="cursor-pointer hover:text-green-400  my-2">
+                  Thêm vào thư viện
+                </div>
+                <div className="cursor-pointer hover:text-green-400  my-2">
+                  Chia sẻ
+                </div>
+                <div
+                  className="cursor-pointer hover:text-green-400  my-2"
+                  onClick={() => {
+                    handleDeleteLikedSong(playlistId);
+                    setLikedPlaylist(false)
+                  }}
+                >
+                  Xóa playlist yêu thích hiện có
+                </div>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
         <div
           className={`flex px-8 py-3 w-full text-white ${
@@ -165,7 +283,7 @@ export default function SinglePlaylistView() {
             {playlistDetails.songs.map((item, index) => {
               return (
                 <SingleSongCard
-                  index={index+1}
+                  index={index + 1}
                   info={item}
                   key={JSON.stringify(item)}
                   playSound={() => {}}

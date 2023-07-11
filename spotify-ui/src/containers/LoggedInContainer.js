@@ -29,7 +29,6 @@ export default function LoggedInContainer({
 
   const [timeSongPlay, setTimeSongPlay] = useState(null);
 
-
   const navigate = useNavigate();
 
   const {
@@ -43,9 +42,11 @@ export default function LoggedInContainer({
     setSongProgress,
     timeSongSeek,
     setTimeSongSeek,
+    volumnChange,
+    setVolumnChange
   } = useContext(songContext);
 
-  const [timeChangeSeekSong, setTimeChangeSeekSong] = useState(timeSongSeek)
+  const [timeChangeSeekSong, setTimeChangeSeekSong] = useState(timeSongSeek);
 
 
   const firstUpdate = useRef(true);
@@ -66,6 +67,7 @@ export default function LoggedInContainer({
         }, 500);
       },
     });
+
     if (soundPlayed) {
       if (timeChangeSeekSong !== null) {
         if (soundPlayed) {
@@ -127,7 +129,7 @@ export default function LoggedInContainer({
   useEffect(() => {
     if (soundPlayed) {
       const seekTime = (soundPlayed.duration() / 100) * timeChangeSeekSong;
-        soundPlayed.seek(seekTime);
+      soundPlayed.seek(seekTime);
     }
   }, [timeChangeSeekSong]);
 
@@ -136,7 +138,7 @@ export default function LoggedInContainer({
       const time = (soundPlayed.seek() / soundPlayed.duration()) * 100;
       setTimeout(() => {
         setSongProgress(time);
-      }, 200)
+      }, 200);
     }
   }, [timeChangeSeekSong]);
   const pauseSound = () => {
@@ -166,6 +168,12 @@ export default function LoggedInContainer({
   };
 
   // Thanh âm thanh
+  useEffect(() => {
+    if (soundPlayed) {
+      soundPlayed.volume(volumnChange / 100);
+    }
+  }, [volumnChange, soundPlayed]);
+  
 
   return (
     <div
@@ -212,8 +220,7 @@ export default function LoggedInContainer({
               <header className=" flex">
                 <i class="fa-solid fa-book leading-6"></i>
                 <span className="ml-2 font-semibold">Thư viện</span>
-                <aside className="translate-x-[96px] h-8 leading-8 flex justify-center items-center ">
-                  <i class="fa-light fa-plus leading-6 mr-6 text-3xl flex h-[100%]"></i>
+                <aside className="translate-x-[142px] h-8 leading-8 flex justify-center items-center ">
                   <i class="fa-solid fa-arrow-right leading-6 text-xl flex h-[100%]"></i>
                 </aside>
               </header>
@@ -320,12 +327,10 @@ export default function LoggedInContainer({
                     <button className="font-semibold text-sm bg-white rounded-2xl px-4 py-1 hover:scale-105 mr-4">
                       Nâng cấp
                     </button>
-                    <Link to="/uploadSong">
-                      <button className="font-semibold  text-sm bg-black text-white rounded-2xl px-4 py-1 hover:scale-105">
-                        <i class="fa-solid fa-download mr-2"></i>
-                        Cài đặt ứng dụng
-                      </button>
-                    </Link>
+                    <button className="font-semibold  text-sm bg-black text-white rounded-2xl px-4 py-1 hover:scale-105">
+                      <i class="fa-solid fa-download mr-2"></i>
+                      Cài đặt ứng dụng
+                    </button>
                     <div className="border-2 rounded-[50%] text-center ml-4 w-8 h-8 flex justify-center items-center cursor-pointer">
                       <i class="fa-solid fa-user text-teal-50"></i>
                     </div>
@@ -391,9 +396,7 @@ export default function LoggedInContainer({
                   id="progress"
                   class="progress"
                   type="range"
-                  value={
-                    songProgress ? `${songProgress}` : `0`
-                  }
+                  value={songProgress ? `${songProgress}` : `0`}
                   step="0.5"
                   min="0"
                   max="100"
@@ -403,23 +406,32 @@ export default function LoggedInContainer({
               <div className="w-[10%]">{timeSongPlay}</div>
             </div>
           </div>
-          <div className="w-1/4">
+          <div className="w-1/4 flex justify-center items-center">
             <div
               className="cursor-pointer"
               onClick={() => {
                 setAddToPlaylistModalOpen(true);
               }}
             >
-              {/* <i
-                class="fa-regular fa-clone cursor-pointer"
-                onClick={() => {
-                  setAddToPlaylistModalOpen(true);
-                }}
-              ></i> */}
               <iconify-icon
                 icon="ic:round-playlist-add"
                 width="28px"
               ></iconify-icon>
+            </div>
+            <div className="text-lg ml-4">
+              <iconify-icon icon="charm:sound-up"></iconify-icon>
+            </div>
+            <div className="w-[25%] flex justify-center items-center mb-2 ml-1">
+              <input
+                id="progress"
+                class="progress"
+                type="range"
+                value={volumnChange ? `${volumnChange}` : `0`}
+                step="0.5"
+                min="0"
+                max="100"
+                onChange={(e) => setVolumnChange(e.target.value)}
+              />
             </div>
           </div>
         </div>
@@ -427,18 +439,14 @@ export default function LoggedInContainer({
         <div className="h-[10%] bg-gradient-to-r from-green-500 to-cyan-400  fixed bottom-0 right-0 left-0 flex  text-white justify-center items-center">
           <div className="">
             <div className="flex text-center justify-center items-center">
-              <div className="mr-1">Xem trước </div>
+              {/* <div className="mr-1">Xem trước </div> */}
               <div className="underline font-semibold cursor-pointer">
                 SPOTIFY
               </div>
             </div>
             <div className="flex">
-              <div>
-                Đăng ký để có thể tạo danh sách nhạc riêng của bạn cùng Spotify
-              </div>
-              <div className="font-semibold  px-2 underline cursor-pointer hover:text-violet-600">
-                Đăng ký Spotify
-              </div>
+              <div>Tận hưởng hương vị âm nhạc cùng với Spotify</div>
+              <div className="font-semibold  px-2 underline cursor-pointer hover:text-violet-600"></div>
             </div>
           </div>
         </div>

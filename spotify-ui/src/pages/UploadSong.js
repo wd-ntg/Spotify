@@ -42,7 +42,7 @@ export default function UploadSong() {
     navigate("/myMusic");
   };
   return (
-    <LoggedInContainer prevUploadSong={true}>
+    <LoggedInContainer prevUploadSong={true} currentActiveScreen="myMusic">
       <div className="w-full mt-12 text-white py-8 bg-neutral-950 px-12">
           <div className="text-xl text-left font-semibold mb-4">Tải nhạc của bạn lên Cloud Spotify</div>
           <div>
