@@ -2,7 +2,7 @@ const express = require("express");
 const UserModel = require("../models/User.js");
 const { getToken } = require("../utils/helpers.js");
 const bcrypt = require("bcrypt");
-
+const passport = require("passport");
 const router = express.Router();
 
 router.post("/register", async (req, res) => {
@@ -12,7 +12,6 @@ router.post("/register", async (req, res) => {
     // Kiểm tra người dùng đã tồn tại trong cơ sở dữ liệu hay chưa
     const user = await UserModel.findOne({ email: email });
 
-
     if (user) {
       return res
         .status(403)
@@ -21,10 +20,7 @@ router.post("/register", async (req, res) => {
 
     // Băm mật khẩu sử dụng bcrypt
     const saltRounds = 10;
-    const hashedPassword = await bcrypt.hash(
-      password,
-      saltRounds
-    );
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
 
     // Tạo người dùng mới
     const newUser = await UserModel.create({
@@ -35,7 +31,6 @@ router.post("/register", async (req, res) => {
       userName,
     });
 
-    
     // Tạo token cho người dùng
     const token = await getToken(email, newUser);
 
@@ -54,7 +49,7 @@ router.post("/register", async (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await UserModel.findOne({ email: email});
+  const user = await UserModel.findOne({ email: email });
   if (!user) {
     return res.status(403).json({ err: "Invalid credentials" });
   }
@@ -79,5 +74,38 @@ router.get("/getinfo", async (req, res) => {
     res.status(403).json({ error: err });
   }
 });
+
+router.post("/user/google-login", async (req, res) => {
+  try {
+    // Lưu thông tin người dùng vào cơ sở dữ liệu
+    const user = new UserModel({
+      name: req.body.name,
+      email: req.body.email,
+      userName: req.body.userName,
+      // ...Thêm các trường khác
+    });
+    await user.save();
+
+    return res.json({ success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, error: "Lỗi server" });
+  }
+});
+
+// router.post(
+//   "/logout",
+//   passport.authenticate("jwt", { session: false }),
+//   async (req, res) => {
+//     try {
+      // const token = req.headers.authorization.split(' ')[1];
+
+      // return res.status(200).json({data: token});
+//       return res.redirect("/login");
+//     } catch (err) {
+//       return res.status(500).json({ err: "Internal server error" });
+//     }
+//   }
+// );
 
 module.exports = router;

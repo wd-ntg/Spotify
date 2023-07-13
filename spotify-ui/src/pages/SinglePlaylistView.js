@@ -15,8 +15,13 @@ export default function SinglePlaylistView() {
     useContext(songContext);
 
   const navigate = useNavigate();
+  const loginNavigate = useNavigate()
+
   const [playlistDetails, setPlaylistDetails] = useState({});
   const [openDetailModal, setOpenDetailModal] = useState(false);
+
+  const [closeModalInfo, setCloseModalInfo] = useState(false);
+
 
   const [timeAllSongs, setTimeAllSongs] = useState(null);
 
@@ -100,6 +105,13 @@ export default function SinglePlaylistView() {
   const minutes = Math.floor((timeAllSongs % 3600) / 60);
   const seconds = Math.floor(timeAllSongs % 60);
 
+  const handleLogout = async () => {
+    localStorage.removeItem("token");
+    sessionStorage.removeItem("token");
+    document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    window.location.reload();
+  };
+
   return (
     <LoggedInContainer
       currentActiveScreen="library"
@@ -151,7 +163,12 @@ export default function SinglePlaylistView() {
                 Cài đặt ứng dụng
               </button>
             </Link>
-            <div className="border-2 rounded-[50%] text-center ml-4 w-8 h-8 flex justify-center items-center cursor-pointer">
+            <div
+              className="border-2 rounded-[50%] text-center ml-4 w-8 h-8 flex justify-center items-center cursor-pointer"
+              onClick={() => {
+                setCloseModalInfo(true);
+              }}
+            >
               <i class="fa-solid fa-user text-teal-50"></i>
             </div>
           </div>
@@ -254,7 +271,7 @@ export default function SinglePlaylistView() {
                   className="cursor-pointer hover:text-green-400  my-2"
                   onClick={() => {
                     handleDeleteLikedSong(playlistId);
-                    setLikedPlaylist(false)
+                    setLikedPlaylist(false);
                   }}
                 >
                   Xóa playlist yêu thích hiện có
@@ -295,6 +312,44 @@ export default function SinglePlaylistView() {
           </div>
         )}
       </div>
+      {closeModalInfo ? (
+        <div
+          className=" top-6 left-0 right-0 bottom-0 absolute z-50"
+          onClick={() => {
+            setCloseModalInfo(false);
+          }}
+        >
+          <div className="text-white flex flex-col absolute top-10 right-[56px] w-36 bg-neutral-800 py-1 text-left rounded-md">
+            <div className="my-1 flex items-center justify-between px-4 cursor-pointer hover:bg-neutral-600 rounded-sm">
+              <div>Xem hồ sơ</div>
+              <div className="">
+                <iconify-icon icon="clarity:pop-out-line"></iconify-icon>
+              </div>
+            </div>
+            <div className="my-1  px-4 cursor-pointer hover:bg-neutral-600 rounded-sm">
+              Hỗ trợ
+            </div>
+            <div className="my-1 flex items-center justify-between  px-4 cursor-pointer hover:bg-neutral-600 rounded-sm">
+              <div>Cài đặt</div>
+              <div className="">
+                <iconify-icon icon="clarity:pop-out-line"></iconify-icon>
+              </div>
+            </div>
+            <div className="border-t-[1px]  px-2  mx-2 mt-2"></div>
+            <div
+              className="my-1 px-4 cursor-pointer hover:bg-neutral-600 rounded-sm"
+              onClick={() => {
+                handleLogout();
+                loginNavigate("/login")
+              }}
+            >
+              Đăng xuất
+            </div>
+          </div>
+        </div>
+      ) : (
+        ""
+      )}
     </LoggedInContainer>
   );
 }

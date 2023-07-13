@@ -17,7 +17,7 @@ export default function Library() {
   }, []);
   return (
     <LoggedInContainer currentActiveScreen="library">
-      <div className="text-white text-2xl text-left font-semibold m-4">Tất cả danh sách phát của bạn</div>
+      <div className="text-white text-2xl text-left font-semibold m-6">Tất cả danh sách phát của bạn</div>
       <div className="grid gap-5 grid-cols-5 py-5 px-8">
         {myPlaylists.map((item) => {
           return (
@@ -37,7 +37,7 @@ export default function Library() {
 const Card = ({ title, description, imgUrl, playlistId }) => {
   const navigate = useNavigate()
   return (
-    <div className="px-4 py-1 rounded-md bg-neutral-900 hover:bg-black cursor-pointer w-full " onClick={() => {navigate("/playlists/" + playlistId)}}>
+    <div className="px-4 py-1 rounded-md bg-neutral-900 hover:bg-black cursor-pointer w-[90%] " onClick={() => {navigate("/playlists/" + playlistId)}}>
       <div className="py-4">
         <img className="w-full rounded flex object-conver  backdrop-contrast-200  bg-white/30 h-[172px]" alt="label" src={imgUrl} />
       </div>

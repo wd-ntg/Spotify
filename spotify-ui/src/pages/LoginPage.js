@@ -120,8 +120,12 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import logoSpotify from "../assest/image/Spotify_Logo_CMYK_Green.png";
 import TextInput from "../components/TextInput";
 import { useCookies } from "react-cookie";
-import { makeUnauthenticatedPOSTRequest } from "../utils/serverHelpers";
+import {
+  makeUnauthenticatedPOSTRequest,
+  makeUnauthenticatedPOSTRequest2,
+} from "../utils/serverHelpers";
 import PasswordInput from "../components/PasswordInput";
+import { GoogleLogin } from "react-google-login";
 
 export default function LoginPage() {
   // const [password, setPassword] = useState(false)
@@ -145,10 +149,7 @@ export default function LoginPage() {
 
   const login = async () => {
     const data = { userName, email, password };
-    const response = await makeUnauthenticatedPOSTRequest(
-      "/auth/login",
-      data
-    );
+    const response = await makeUnauthenticatedPOSTRequest("/auth/login", data);
     if (response && !response.err) {
       const token = response.token;
       const date = new Date();
@@ -160,6 +161,27 @@ export default function LoginPage() {
       alert("Failure");
     }
   };
+
+  // Login with google
+
+  const clientID =
+    "658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com";
+
+  const onLoginSucess = async (req, res) => {
+    const response = await makeUnauthenticatedPOSTRequest2(
+      "/auth/user/google-login",
+      {
+        name: req.profilObj.givenName, // Liên kết với gg login để lấy dữ liệu
+        email: req.profilObj.email,
+        userName: req.profilObj.name,
+      }
+    );
+  };
+
+  const onFailureSucess = async (req, res) => {
+    console.log("Failure: ", req);
+  };
+
   return (
     <div className="text-center">
       <header className="w-[100%] h-[84px] flex justify-center items-center border-b-2">
@@ -177,9 +199,29 @@ export default function LoginPage() {
           </button>
         </div>
         <div className="my-2">
-          <button className="font-semibold w-[320px] h-[32px] border-2 rounded-2xl hover:border-green-400 hover:scale-95">
-            <i class="fa-brands fa-google mr-2"></i>Tiếp tục bằng Google
-          </button>
+          <GoogleLogin
+            clientId={clientID}
+            render={(renderProps) => (
+              <button  className="font-semibold w-[320px] h-[32px] border-2 rounded-2xl hover:border-green-400 hover:scale-95"
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+
+              >
+                <i class="fa-brands fa-google mr-2"></i>Tiếp tục bằng Google
+              </button>
+            )}
+            buttonText="Login"
+            onSuccess={onLoginSucess}
+            onFailure={onFailureSucess}
+            cookiePolicy={"single_host_origin"}
+          />
+          {/* <GoogleLogin
+            clientId="658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com"
+            buttonText="Login"
+            // onSuccess={responseGoogle}
+            // onFailure={responseGoogle}
+            cookiePolicy={"single_host_origin"}
+          /> */}
         </div>
         <div className="my-2">
           <button className="font-semibold w-[320px] h-[32px] border-2 rounded-2xl hover:border-green-400 hover:scale-95">
@@ -230,7 +272,7 @@ export default function LoginPage() {
                 className="w-[132px] h-[32px] border-2 rounded-2xl hover:border-green-600 bg-green-400"
                 onClick={(e) => {
                   e.preventDefault();
-                  login()
+                  login();
                 }}
               >
                 Đăng nhập
@@ -254,5 +296,3 @@ export default function LoginPage() {
     </div>
   );
 }
-
-
