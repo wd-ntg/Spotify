@@ -5,6 +5,7 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
+  useParams,
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Howl, Howler } from "howler";
@@ -26,18 +27,21 @@ export default function LoggedInContainer({
   currentActiveScreen,
   prevlibrary,
   prevUploadSong,
+  playlistId,
 }) {
   const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
   const [addToPlaylistModalOpen, setAddToPlaylistModalOpen] = useState(false);
+
+  const [playlistDetails, setPlaylistDetails] = useState({});
+  const [currentSongIndex, setCurrentSongIndex] = useState(0);
 
   const [timeSongPlay, setTimeSongPlay] = useState(null);
 
   const [closeModalInfo, setCloseModalInfo] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const loginNavigate = useNavigate()
-
+  const loginNavigate = useNavigate();
 
   const {
     currentSong,
@@ -77,10 +81,8 @@ export default function LoggedInContainer({
 
     if (soundPlayed) {
       if (timeChangeSeekSong !== null) {
-        if (soundPlayed) {
-          const time = (sound.seek() / sound.duration()) * 100;
-          setSongProgress(time);
-        }
+        const time = (sound.seek() / sound.duration()) * 100;
+        setSongProgress(time);
       }
     }
     setSoundPlayed(sound);
@@ -145,7 +147,7 @@ export default function LoggedInContainer({
       const time = (soundPlayed.seek() / soundPlayed.duration()) * 100;
       setTimeout(() => {
         setSongProgress(time);
-      }, 200);
+      }, 300);
     }
   }, [timeChangeSeekSong]);
   const pauseSound = () => {
@@ -188,6 +190,45 @@ export default function LoggedInContainer({
     document.cookie = "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     window.location.reload();
   };
+
+  // Chuyen nhac
+
+  useEffect(() => {
+    const getData = async () => {
+      const response = await makeUnauthenticatedGetMySongRequest(
+        "/playlists/get/playlist/" + playlistId
+      );
+      setPlaylistDetails(response);
+    };
+    getData();
+  }, []);
+
+  useEffect(() => {
+    if (playlistDetails.songs && currentSong) {
+      setCurrentSongIndex(
+        playlistDetails.songs.findIndex((song) => song._id === currentSong._id)
+      );
+    }
+  }, [currentSong, playlistDetails.songs]);
+
+  const handlePrevSong = () => {
+    if (currentSongIndex == 0) {
+      return;
+    } else {
+      setCurrentSong(playlistDetails.songs[currentSongIndex - 1]);
+    }
+  };
+
+
+  const handleNextSong = () => {
+    if (playlistDetails) {
+      if (currentSongIndex === playlistDetails.songs.length-1) {
+        return;
+      } else {
+        setCurrentSong(playlistDetails.songs[currentSongIndex + 1])
+      }
+    }
+  }
 
   return (
     <div
@@ -388,7 +429,10 @@ export default function LoggedInContainer({
                 <i class="fa-solid fa-shuffle hover:text-white text-gray-400 cursor-pointer"></i>
               </div>
               <div className="mx-4">
-                <i class="fa-solid fa-backward-step text-xl hover:text-white text-gray-400 cursor-pointer"></i>
+                <i
+                  class="fa-solid fa-backward-step text-xl hover:text-white text-gray-400 cursor-pointer"
+                  onClick={handlePrevSong}
+                ></i>
               </div>
               <div className="mx-4 w-8 h-8 border-solid border-2 border-teal-50 flex justify-center items-center rounded-full">
                 <i
@@ -401,7 +445,10 @@ export default function LoggedInContainer({
                 ></i>
               </div>
               <div className="mx-4">
-                <i class="fa-solid fa-forward-step text-xl hover:text-white text-gray-400 cursor-pointer"></i>
+                <i
+                  class="fa-solid fa-forward-step text-xl hover:text-white text-gray-400 cursor-pointer"
+                  onClick={handleNextSong}
+                ></i>
               </div>
               <div>
                 <i class="fa-solid fa-repeat hover:text-white text-gray-400 cursor-pointer"></i>
@@ -419,7 +466,9 @@ export default function LoggedInContainer({
                   step="0.5"
                   min="0"
                   max="100"
-                  onChange={(e) => setTimeChangeSeekSong(e.target.value)}
+                  onChange={(e) => {
+                    setTimeChangeSeekSong(e.target.value);
+                  }}
                 />
               </div>
               <div className="w-[10%]">{timeSongPlay}</div>
@@ -498,7 +547,7 @@ export default function LoggedInContainer({
               className="my-1 px-4 cursor-pointer hover:bg-neutral-600 rounded-sm"
               onClick={() => {
                 handleLogout();
-                loginNavigate("/login")
+                loginNavigate("/login");
               }}
             >
               Đăng xuất

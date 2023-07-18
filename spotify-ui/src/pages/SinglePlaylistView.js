@@ -11,17 +11,16 @@ import songContext from "../contexts/songContext";
 import { Howl } from "howler";
 
 export default function SinglePlaylistView() {
-  const { playSound, isPaused, likedPlaylist, setLikedPlaylist } =
+  const { currentSong, playSound, isPaused, likedPlaylist, setLikedPlaylist } =
     useContext(songContext);
 
   const navigate = useNavigate();
-  const loginNavigate = useNavigate()
+  const loginNavigate = useNavigate();
 
   const [playlistDetails, setPlaylistDetails] = useState({});
   const [openDetailModal, setOpenDetailModal] = useState(false);
 
   const [closeModalInfo, setCloseModalInfo] = useState(false);
-
 
   const [timeAllSongs, setTimeAllSongs] = useState(null);
 
@@ -99,7 +98,7 @@ export default function SinglePlaylistView() {
     };
 
     getTimeSongs();
-  }, [playlistDetails]);
+  }, [playlistDetails, playSound]);
 
   const hours = Math.floor(timeAllSongs / 3600);
   const minutes = Math.floor((timeAllSongs % 3600) / 60);
@@ -116,7 +115,7 @@ export default function SinglePlaylistView() {
     <LoggedInContainer
       currentActiveScreen="library"
       prevlibrary={true}
-      playlistId
+      playlistId={playlistId}
     >
       <div
         ref={scrollRef} // Sử dụng useRef để tham chiếu đến phần tử cuộn
@@ -340,7 +339,7 @@ export default function SinglePlaylistView() {
               className="my-1 px-4 cursor-pointer hover:bg-neutral-600 rounded-sm"
               onClick={() => {
                 handleLogout();
-                loginNavigate("/login")
+                loginNavigate("/login");
               }}
             >
               Đăng xuất

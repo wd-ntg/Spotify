@@ -24,7 +24,6 @@ function App() {
   const [currentSong, setCurrentSong] = useState(null);
   const [songProgress, setSongProgress] = useState(null)
   const [timeSongSeek, setTimeSongSeek] = useState(null)
-  // const [likedSong, setLikedSong] = useState(null);
   const [likedPlaylist, setLikedPlaylist] = useState(false)
   const [volumnChange, setVolumnChange] = useState(100)
 
@@ -46,8 +45,6 @@ function App() {
               setSongProgress,
               timeSongSeek,
               setTimeSongSeek,
-              // likedSong,
-              // setLikedSong,
               likedPlaylist,
               setLikedPlaylist,
               volumnChange,
