@@ -28,7 +28,7 @@ export default function LikedSongPage() {
   }, [likedSongsData && likedPlaylistsData]);
 
   return (
-    <LoggedInContainer currentActiveScreen="likedSongs">
+    <LoggedInContainer currentActiveScreen="likedSongs" likedSongsData={likedSongsData}>
       <div className="p-8">
         <div className="text-left text-white text-2xl mb-4">
           Những bài hát bạn đã thích

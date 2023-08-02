@@ -3,6 +3,8 @@ import "../App.css";
 import LoggedInContainer from "../containers/LoggedInContainer";
 import { useNavigate } from "react-router-dom";
 import { makeUnauthenticatedGetAllPlaylists } from "../utils/serverHelpers";
+import WindowCard from "../components/WindowCard";
+import SongCardPlaylist from "../components/SongCardPlaylist";
 
 export default function LoggedInHome() {
   const navigate = useNavigate();
@@ -29,6 +31,8 @@ export default function LoggedInHome() {
   render.push(playlists);
   return (
     <LoggedInContainer currentActiveScreen="home">
+      <WindowCard/>
+      <SongCardPlaylist/>
       <PlaylistView
         titleText="Nhạc Pop"
         cardDatas = {playlists}

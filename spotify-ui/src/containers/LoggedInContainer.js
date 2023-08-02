@@ -28,6 +28,7 @@ export default function LoggedInContainer({
   prevlibrary,
   prevUploadSong,
   playlistId,
+  likedSongsData
 }) {
   const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
   const [addToPlaylistModalOpen, setAddToPlaylistModalOpen] = useState(false);
@@ -364,7 +365,7 @@ export default function LoggedInContainer({
               {prevlibrary ? (
                 ""
               ) : (
-                <div className="flex w-full bg_bg  items-center py-3 px-6 mb-1 sticky top-0">
+                <div className="flex w-full bg_bg  items-center py-3 px-6 mb-1 sticky top-0 z-40">
                   <div className="nav_left">
                     {prevlibrary || prevUploadSong ? (
                       <i

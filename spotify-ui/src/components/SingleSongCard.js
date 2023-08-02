@@ -135,7 +135,7 @@ export default function SingleSongCard({
       {deleteLikedSong ? (
         <div className="w-[5%] flex justify-center items-center ">
           <button
-            className="border-[1px] border-green-300 text-white px-2 py-1 rounded-xl hover:bg-green-400 z-20"
+            className="border-[1px] border-green-300 text-white px-2 py-1 rounded-xl hover:bg-green-400"
             onClick={() => {handleDeleteLikedSong(info._id)}}
           >
             Xóa
