@@ -145,6 +145,20 @@ const WindowCard = () => {
                 hoverState[0] ? "" : "hidden"
               }`}
             >
+              <div className="w-8 text-pink-400 h-[296px] translate-y-[-32px] rounded-l-md items-center text-left bg-blue-50 flex flex-col justify-center bg-gradient-to-r from-black to-black">
+                <div className="text-xl w-6 flex justify-center items-center">
+                  L
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  I
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  S
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  A
+                </div>
+              </div>
               <div className="flex flex-col justify-center h-[360px] mx-4">
                 <div className="text-4xl text-pink_light">Black Pink</div>
                 <div className="text-left text-3xl mt-4 text-black">Lisa</div>
@@ -187,10 +201,30 @@ const WindowCard = () => {
               </div>
             )}
             <div
-              className={`absolute top-0 left-0 text-white ${
+              className={`absolute top-0 left-0 flex items-center text-white ${
                 hoverState[1] ? "" : "hidden"
               }`}
             >
+              <div className="w-8  h-[296px] translate-y-[-32px] rounded-l-md items-center text-left text-pink-400 flex flex-col justify-center bg-black  ">
+                <div className="text-xl w-6 flex justify-center items-center">
+                  J
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  E
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  N
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  N
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  I
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  E
+                </div>
+              </div>
               <div className="flex flex-col justify-center h-[360px] mx-4">
                 <div className="text-4xl text-pink_light">Black Pink</div>
                 <div className="text-left text-3xl mt-4 text-black">Jennie</div>
@@ -230,10 +264,27 @@ const WindowCard = () => {
               </div>
             )}
             <div
-              className={`absolute top-0 left-0 text-white ${
+              className={`absolute top-0 left-0 flex items-center text-white ${
                 hoverState[2] ? "" : "hidden"
               }`}
             >
+              <div className="w-8  h-[296px] translate-y-[-32px] rounded-l-md items-center text-left flex flex-col justify-center bg-pink-500">
+                <div className="text-xl w-6 flex justify-center items-center">
+                  J
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  I
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  S
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  O
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  O
+                </div>
+              </div>
               <div className="flex flex-col justify-center h-[360px] mx-4">
                 <div className="text-4xl text-black">Black Pink</div>
                 <div className="text-left text-3xl mt-4 text-pink_light">Jisoo</div>
@@ -270,10 +321,24 @@ const WindowCard = () => {
               </div>
             )}
             <div
-              className={`absolute top-0 left-0 text-white ${
+              className={`absolute top-0 left-0 flex items-center text-white ${
                 hoverState[3] ? "" : "hidden"
               }`}
             >
+              <div className="w-8  h-[296px] translate-y-[-32px] rounded-l-md items-center text-left bg-pink-500 flex flex-col justify-center">
+                <div className="text-xl w-6 flex justify-center items-center">
+                  R
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  O
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  S
+                </div>
+                <div className="text-xl w-6 flex justify-center items-center">
+                  E
+                </div>
+              </div>
               <div className="flex flex-col justify-center h-[360px] mx-4">
                 <div className="text-4xl text-black">Black Pink</div>
                 <div className="text-left text-3xl mt-4 text-pink_light">Rose</div>

@@ -23,16 +23,16 @@ export default function SongCardPlaylist() {
     setTimeOfDay(currentTimeOfDay);
   }, []);
   return (
-    <div className="px-8 py-8">
+    <div className="px-12 py-8 mt-2">
       <div className="text-left text-white text-2xl">Chào {timeOfDay}</div>
       <div className="py-4 flex justify-between">
         <Link to="/playlists/64aa41a330600c172fc341f3">
-          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill hover:shadow-md hover:shadow-green-500/40">
+          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill hover:shadow-md hover:shadow-green-300/40">
             <img
               className="w-20 h-20 rounded-l-md overflow-hidden"
               src="https://images.pexels.com/photos/4946723/pexels-photo-4946723.jpeg?auto=compress&cs=tinysrgb&w=600"
             />
-            <div className="text-white text-xl px-4 text-left  ">
+            <div className="text-black text-xl px-4 text-left  ">
               Thiên hạ nghe gì
             </div>
           </div>
@@ -43,7 +43,7 @@ export default function SongCardPlaylist() {
               className="w-20 h-20 rounded-l-md overflow-hidden"
               src="https://images.pexels.com/photos/6858604/pexels-photo-6858604.jpeg?auto=compress&cs=tinysrgb&w=600"
             />
-            <div className="text-white text-xl px-4 text-left">
+            <div className="text-black text-xl px-4 text-left">
               Peaceful Piano
             </div>
           </div>
@@ -54,7 +54,7 @@ export default function SongCardPlaylist() {
               className="w-20 h-20 rounded-l-md overflow-hidden"
               src="https://images.pexels.com/photos/6194940/pexels-photo-6194940.jpeg?auto=compress&cs=tinysrgb&w=600"
             />
-            <div className="text-white text-xl px-4 text-left">
+            <div className="text-black text-xl px-4 text-left">
               My recommendation playlist
             </div>
           </div>
@@ -67,7 +67,7 @@ export default function SongCardPlaylist() {
               className="w-20 h-20 rounded-l-md overflow-hidden"
               src="https://images.pexels.com/photos/6775273/pexels-photo-6775273.jpeg?auto=compress&cs=tinysrgb&w=600"
             />
-            <div className="text-white text-xl px-4 text-left">
+            <div className="text-black text-xl px-4 text-left">
               My recommendation playlist
             </div>
           </div>

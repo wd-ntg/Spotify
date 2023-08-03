@@ -225,7 +225,7 @@ input[type="checkbox"]:checked ~ .checkbox {
 }
 
 .bg_fill {
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: #d5cccf;
   backdrop-filter: blur(24px);
 }
 

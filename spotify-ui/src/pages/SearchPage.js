@@ -16,12 +16,11 @@ export default function SearchPage() {
     // setSearchText("");
   };
 
-
   return (
     <div>
       <LoggedInContainer currentActiveScreen="searchpage">
         <div
-          className={`w-1/5 translate-y-[-50px] translate-x-[102px] border-solid border-2 rounded-2xl py-1   bg-slate-600 ml-4 ${
+          className={`w-1/5 translate-y-[-50px] translate-x-[102px] border-solid border-2 rounded-2xl py-1  relative z-50 bg-slate-600 ml-4 ${
             isInputFocused ? "border-white" : "border-slate-600"
           }`}
         >

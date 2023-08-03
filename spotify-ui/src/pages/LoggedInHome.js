@@ -45,7 +45,7 @@ export default function LoggedInHome() {
 const PlaylistView = ({ titleText, cardDatas }) => {
   
   return (
-    <div className="text-white mt-8 px-4 text-left">
+    <div className="text-white mt-8 px-12 text-left">
       <div className="text-2xl font-semibold mb-5">{titleText}</div>
       <div className="w-full flex space-x-6">
         {Array.isArray(cardDatas) ? (
