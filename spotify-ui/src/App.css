@@ -1,4 +1,4 @@
-  @import url('https://fonts.googleapis.com/css2?family=Belanosima:wght@400;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Belanosima:wght@400;600;700&display=swap");
 html {
   overflow-y: hidden;
 }
@@ -85,11 +85,10 @@ html {
 }
 
 * {
-  font-family: 'Belanosima', sans-serif;
+  font-family: "Belanosima", sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-
 }
 
 html {
@@ -154,7 +153,6 @@ html {
   }
 }
 
-
 /* Checkbox */
 
 label {
@@ -164,12 +162,12 @@ label {
   cursor: pointer;
 }
 
-input[type='checkbox'] {
+input[type="checkbox"] {
   position: absolute;
   transform: scale(0);
 }
 
-input[type='checkbox']:checked ~ .checkbox {
+input[type="checkbox"]:checked ~ .checkbox {
   transform: rotate(45deg) translateY(-6px);
   width: 14px;
   margin-left: 5px;
@@ -211,17 +209,16 @@ input[type='checkbox']:checked ~ .checkbox {
   cursor: pointer;
 }
 
-
 .card_bg {
-  background-color: rgb(22,22,22);
+  background-color: rgb(22, 22, 22);
 }
 
 .bg_bg {
-  background-color: rgb(31,31,31);
+  background-color: rgb(31, 31, 31);
 }
 
 .hover_card:hover {
-  width: 25%;
+  width: 60%;
   transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   transform: translateY(12px);
   cursor: pointer;
@@ -230,4 +227,36 @@ input[type='checkbox']:checked ~ .checkbox {
 .bg_fill {
   background-color: rgba(255, 255, 255, 0.4);
   backdrop-filter: blur(24px);
+}
+
+.disc {
+  animation: 2s disc_rotate linear infinite;
+}
+
+@keyframes disc_rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.song_trans {
+  animation: 4s song_trans linear infinite;
+}
+
+@keyframes song_trans {
+  0% {
+    transform: translateX(100%); /* Di chuyển 100% khỏi bên phải */
+  }
+  50% {
+    transform: translateX(0); /* Di chuyển về vị trí ban đầu */
+  }
+  50% {
+    transform: translateX(0); /* Vẫn giữ ở vị trí ban đầu */
+  }
+  100% {
+    transform: translateX(-100%); /* Ló ra 100% ở bên phải */
+  }
 }

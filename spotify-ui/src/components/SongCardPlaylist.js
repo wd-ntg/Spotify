@@ -23,7 +23,7 @@ export default function SongCardPlaylist() {
     setTimeOfDay(currentTimeOfDay);
   }, []);
   return (
-    <div className="px-8 py-12">
+    <div className="px-8 py-8">
       <div className="text-left text-white text-2xl">Chào {timeOfDay}</div>
       <div className="py-4 flex justify-between">
         <Link to="/playlists/64aa41a330600c172fc341f3">

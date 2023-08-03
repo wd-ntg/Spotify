@@ -21,5 +21,5 @@ export default function PasswordInput({
         onChange={(e) => setValue(e.target.value)}
       ></input>
     </div>
-  );
+  );  
 }
