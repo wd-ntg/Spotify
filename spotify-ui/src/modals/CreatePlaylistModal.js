@@ -20,7 +20,7 @@ export default function CreatePlaylistModal({ closeModal }) {
 
   return (
     <div
-      className="absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center z-10 bg-gradient-to-r from-neutral-800 to-neutral-600 opacity-95 "
+      className="absolute top-0 bottom-0 left-0 right-0 flex justify-center items-center z-50 bg-gradient-to-r from-neutral-800 to-neutral-600 opacity-95 "
       onClick={closeModal}
     >
       <div

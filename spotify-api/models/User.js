@@ -38,6 +38,10 @@ const User = new mongoose.Schema({
     type: String,
     default: "",
   },
+  avatar: { 
+    type: String, 
+    required: false,
+  },
   isAdmin: {
     type: Boolean,
     default: false,

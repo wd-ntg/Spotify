@@ -30,7 +30,7 @@ const WindowCard = () => {
             />
             <div className="absolute top-[65%] left-0 text-white ">
               <div className="py-8 mx-6 overflow-hidden">
-                <div className="mb-2 text-slate-600">Spotify - Albumn</div>
+                <div className="mb-2 text-slate-600 text-xl">Spotify - Song</div>
                 <div className="text-left flex  w-[124px] overflow-hidden">
                   <div className="song_trans flex">
                   <div className="w-6 h-6 text-2xl text-black disc flex justify-center items-center ">
@@ -53,7 +53,7 @@ const WindowCard = () => {
             />
             <div className="absolute top-[65%] left-0 text-white ">
               <div className="py-8 mx-6 overflow-hidden">
-                <div className="mb-2 text-skin">Spotify - Albumn</div>
+                <div className="mb-2 text-skin text-xl">Spotify - Song</div>
                 <div className="text-left flex  w-[124px] overflow-hidden">
                   <div className="song_trans flex">
                   <div className="w-6 h-6 text-2xl text-white disc flex justify-center items-center ">
@@ -76,7 +76,7 @@ const WindowCard = () => {
             />
             <div className="absolute top-[65%] left-0 text-white ">
               <div className="py-8 mx-6 overflow-hidden">
-                <div className="mb-2 text-yellow-400">Spotify - Albumn</div>
+                <div className="mb-2 text-yellow-400 text-xl">Spotify - Song</div>
                 <div className="text-left flex  w-[124px] overflow-hidden">
                   <div className="song_trans flex">
                   <div className="w-6 h-6 text-2xl text-black disc flex justify-center items-center ">
@@ -99,7 +99,7 @@ const WindowCard = () => {
             />
             <div className="absolute top-[65%] left-0 text-white ">
               <div className="py-8 mx-6 overflow-hidden">
-                <div className="mb-2 text-pink_light">Spotify - Albumn</div>
+                <div className="mb-2 text-pink_light text-xl">Spotify - Song</div>
                 <div className="text-left flex  w-[156px] overflow-hidden">
                   <div className="song_trans flex">
                   <div className="w-6 h-6 text-2xl text-white disc flex justify-center items-center ">

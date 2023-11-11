@@ -27,7 +27,7 @@ export default function SongCardPlaylist() {
       <div className="text-left text-white text-2xl">Chào {timeOfDay}</div>
       <div className="py-4 flex justify-between">
         <Link to="/playlists/64aa41a330600c172fc341f3">
-          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill hover:shadow-md hover:shadow-green-300/40">
+          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill box_shadow-green">
             <img
               className="w-20 h-20 rounded-l-md overflow-hidden"
               src="https://images.pexels.com/photos/4946723/pexels-photo-4946723.jpeg?auto=compress&cs=tinysrgb&w=600"
@@ -38,7 +38,7 @@ export default function SongCardPlaylist() {
           </div>
         </Link>
         <Link to="/playlists/64a98415d730d7eefdf89b60">
-          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill hover:shadow-md hover:shadow-indigo-500/40">
+          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill box_shadow-sky">
             <img
               className="w-20 h-20 rounded-l-md overflow-hidden"
               src="https://images.pexels.com/photos/6858604/pexels-photo-6858604.jpeg?auto=compress&cs=tinysrgb&w=600"
@@ -49,7 +49,7 @@ export default function SongCardPlaylist() {
           </div>
         </Link>
         <Link to="/playlists/64a98415d730d7eefdf89b60">
-          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill hover:shadow-md hover:shadow-sky-500/40">
+          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill box_shadow-blue">
             <img
               className="w-20 h-20 rounded-l-md overflow-hidden"
               src="https://images.pexels.com/photos/6194940/pexels-photo-6194940.jpeg?auto=compress&cs=tinysrgb&w=600"
@@ -62,7 +62,7 @@ export default function SongCardPlaylist() {
       </div>
       <div>
         <Link to="/playlists/64aa164255eb5f06b70dab76">
-          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill hover:shadow-md hover:shadow-rose-300/40">
+          <div className="h-20 w-[332px] flex items-center rounded-md overflow-hidden bg_fill box_shadow-rose">
             <img
               className="w-20 h-20 rounded-l-md overflow-hidden"
               src="https://images.pexels.com/photos/6775273/pexels-photo-6775273.jpeg?auto=compress&cs=tinysrgb&w=600"

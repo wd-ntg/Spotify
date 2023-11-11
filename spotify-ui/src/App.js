@@ -16,6 +16,7 @@ import Library from "./pages/Library";
 import SinglePlaylistView from './pages/SinglePlaylistView'
 import ServerUploadSong from "./pages/ServerUploadSong";
 import LikedSongPage from "./pages/LikedSongPage";
+import DashBoard from "./pages/DashBoard";
 
 function App() {
   const [cookie, setCookie] = useCookies(["token"]);
@@ -60,6 +61,7 @@ function App() {
               <Route path="/library" element={<Library />}></Route>
               <Route path="/likedSongs" element={<LikedSongPage />}></Route>
               <Route path="/playlists/:playlistId" element={<SinglePlaylistView />}></Route>
+              <Route path="/dashboard" element={<DashBoard/>}></Route>
             </Routes>
           </songContext.Provider>
         ) : (

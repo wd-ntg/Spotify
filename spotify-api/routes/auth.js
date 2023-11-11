@@ -108,4 +108,19 @@ router.post("/user/google-login", async (req, res) => {
 //   }
 // );
 
+// Get Info User
+
+router.get(
+  "/info",
+  passport.authenticate("jwt", { session: false }),
+  async (req, res) => {
+    try {
+      const currentUser = req.user;
+      return res.status(200).json(currentUser);
+    } catch (error) {
+      return res.status(500).json({ err: "Internal server error" });
+    }
+  }
+);
+
 module.exports = router;

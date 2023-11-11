@@ -260,3 +260,16 @@ input[type="checkbox"]:checked ~ .checkbox {
     transform: translateX(-100%); /* Ló ra 100% ở bên phải */
   }
 }
+
+.box_shadow-green:hover {
+  box-shadow: 1px 2px 20px -1px lawngreen;
+}
+.box_shadow-sky:hover {
+  box-shadow: 1px 2px 20px -1px rgb(163, 238, 240);  
+}
+.box_shadow-blue:hover {
+  box-shadow: 1px 2px 20px -1px rgb(104, 173, 242);
+}
+.box_shadow-rose:hover {
+  box-shadow: 1px 2px 20px -1px rgb(237, 114, 141);
+}

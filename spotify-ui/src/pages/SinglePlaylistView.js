@@ -72,7 +72,7 @@ export default function SinglePlaylistView() {
   const scrollRef = useRef(null);
 
   const handleScrollSticky = () => {
-    if (Math.ceil(scrollRef.current.scrollTop) >= 380) {
+    if (Math.ceil(scrollRef.current.scrollTop) >= 360) {
       setIsSticky(true);
     } else {
       setIsSticky(false);
@@ -319,12 +319,14 @@ export default function SinglePlaylistView() {
           }}
         >
           <div className="text-white flex flex-col absolute top-10 right-[56px] w-36 bg-neutral-800 py-1 text-left rounded-md">
-            <div className="my-1 flex items-center justify-between px-4 cursor-pointer hover:bg-neutral-600 rounded-sm">
-              <div>Xem hồ sơ</div>
-              <div className="">
-                <iconify-icon icon="clarity:pop-out-line"></iconify-icon>
+            <Link to="/dashboard">
+              <div className="my-1 flex items-center justify-between px-4 cursor-pointer hover:bg-neutral-600 rounded-sm">
+                <div>Xem hồ sơ</div>
+                <div className="">
+                  <iconify-icon icon="clarity:pop-out-line"></iconify-icon>
+                </div>
               </div>
-            </div>
+            </Link>
             <div className="my-1  px-4 cursor-pointer hover:bg-neutral-600 rounded-sm">
               Hỗ trợ
             </div>
