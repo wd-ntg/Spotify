@@ -18,6 +18,12 @@ app.use(cors());
 
 app.use(express.json());
 
+// Tang kich thuoc upload
+
+app.use(bodyParser.json({limit: "50mb"}));
+app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+
+
 const URI =
   "mongodb+srv://admin:" +
   process.env.MONGO_PASSWORD +

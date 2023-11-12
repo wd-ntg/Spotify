@@ -5,14 +5,24 @@ import { useEffect } from "react";
 import { makeUnauthenticatedGetMySongRequest } from "../utils/serverHelpers";
 import { useNavigate } from "react-router-dom";
 
+import Loader from "../components/Loader";
+
 export default function LikedSongPage() {
   const [likedSongsData, setLikedSongsData] = useState([]);
   const [likedPlaylistsData, setLikedPlaylistsData] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const getData = async () => {
       const response = await makeUnauthenticatedGetMySongRequest(
         "/song/get/likedSongs/fromUser"
       );
+      if (!response) {
+        setLoading(true);
+      } else {
+        setLoading(false);
+      }
       setLikedSongsData(response.data.likedSongs);
     };
 
@@ -28,25 +38,34 @@ export default function LikedSongPage() {
   }, [likedSongsData && likedPlaylistsData]);
 
   return (
-    <LoggedInContainer currentActiveScreen="likedSongs" likedSongsData={likedSongsData}>
+    <LoggedInContainer
+      currentActiveScreen="likedSongs"
+      likedSongsData={likedSongsData}
+    >
       <div className="p-8">
         <div className="text-left text-white text-2xl mb-4">
           Những bài hát bạn đã thích
         </div>
         <div>
-          {likedSongsData.map((item, index) => {
-            return (
-              <SingleSongCard
-                index={index + 1}
-                info={item}
-                key={JSON.stringify(item)}
-                playSound={() => {}}
-                playlistId={item._id}
-                songTrack={item.track}
-                deleteLikedSong
-              />
-            );
-          })}
+          {loading ? (
+            <div>
+              <Loader />
+            </div>
+          ) : (
+            likedSongsData.map((item, index) => {
+              return (
+                <SingleSongCard
+                  index={index + 1}
+                  info={item}
+                  key={JSON.stringify(item)}
+                  playSound={() => {}}
+                  playlistId={item._id}
+                  songTrack={item.track}
+                  deleteLikedSong
+                />
+              );
+            })
+          )}
         </div>
       </div>
       <div className="p-8">
@@ -54,7 +73,7 @@ export default function LikedSongPage() {
           Danh sách phát bạn đã thích
         </div>
         <div>
-          <PlaylistView cardDatas={likedPlaylistsData}/>
+          <PlaylistView cardDatas={likedPlaylistsData} />
         </div>
       </div>
     </LoggedInContainer>
@@ -62,7 +81,6 @@ export default function LikedSongPage() {
 }
 
 const PlaylistView = ({ titleText, cardDatas }) => {
-  
   return (
     <div className="text-white mt-8 px-4 text-left">
       {/* <div className="text-2xl font-semibold mb-5">{titleText}</div> */}

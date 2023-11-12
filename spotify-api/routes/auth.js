@@ -4,6 +4,7 @@ const { getToken } = require("../utils/helpers.js");
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const router = express.Router();
+const multer = require("multer");
 
 router.post("/register", async (req, res) => {
   try {
@@ -98,9 +99,9 @@ router.post("/user/google-login", async (req, res) => {
 //   passport.authenticate("jwt", { session: false }),
 //   async (req, res) => {
 //     try {
-      // const token = req.headers.authorization.split(' ')[1];
+// const token = req.headers.authorization.split(' ')[1];
 
-      // return res.status(200).json({data: token});
+// return res.status(200).json({data: token});
 //       return res.redirect("/login");
 //     } catch (err) {
 //       return res.status(500).json({ err: "Internal server error" });
@@ -122,5 +123,71 @@ router.get(
     }
   }
 );
+
+// Upload info
+const uploadDirectory = 'D:/Dev Project/spotify-clone/spotify-ui/src/pages/uploads';
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    // cb(null, "../src/uploads/");
+    cb(null, uploadDirectory);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now();
+    cb(null, uniqueSuffix + file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+router.post("/upload_info", upload.single('image'), async (req, res) => {
+  const { email } = req.body;
+  const avatar = req.file; // Đổi từ req.body thành req.file để lấy thông tin file
+
+  const user = await UserModel.findOne({ email: email });
+  if (!user) {
+    return res.status(403).json({ err: "Invalid credentials" });
+  }
+
+  try {
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { email: email },
+      {
+        $set: {
+          avatar: avatar.filename // Lưu tên file hoặc đường dẫn của avatar trong cơ sở dữ liệu
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.log("Error: ", err);
+    res.status(500).json({ error: "Error updating avatar" });
+  }
+});
+
+router.post("/upload_name", async (req, res) => {
+  const { email, newName } = req.body;
+  const avatar = req.file; // Đổi từ req.body thành req.file để lấy thông tin file
+
+  const user = await UserModel.findOne({ email: email });
+  if (!user) {
+    return res.status(403).json({ err: "Invalid credentials" });
+  }
+
+  try {
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { email: email },
+      {
+        $set: {
+          userName: newName // Lưu tên file hoặc đường dẫn của avatar trong cơ sở dữ liệu
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.log("Error: ", err);
+    res.status(500).json({ error: "Error updating avatar" });
+  }
+});
 
 module.exports = router;

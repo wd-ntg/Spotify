@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import logoSpotify from "../assest/image/Spotify_Logo_CMYK_Green.png";
@@ -10,6 +9,10 @@ import {
 } from "../utils/serverHelpers";
 import PasswordInput from "../components/PasswordInput";
 import { GoogleLogin } from "react-google-login";
+
+// Login in with gg
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../utils/firebase-config";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -36,19 +39,49 @@ export default function LoginPage() {
 
   // Login with google
 
-  const clientID =
-    "658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com";
+  const googleProvider = new GoogleAuthProvider();
 
-  const onLoginSucess = async (req, res) => {
-    const response = await makeUnauthenticatedPOSTRequest2(
-      "/auth/user/google-login",
-      {
-        name: req.profilObj.givenName, // Liên kết với gg login để lấy dữ liệu
-        email: req.profilObj.email,
-        userName: req.profilObj.name,
+  const GoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      if (result) {
+        const data = {
+          firstName: result._tokenResponse.firstName,
+          lastName: " ",
+          userName: result._tokenResponse.fullName,
+          email: result._tokenResponse.email,
+          password: " ",
+        };
+        const response = await makeUnauthenticatedPOSTRequest(
+          "/auth/register",
+          data
+        );
+        if (response && !response.err) {
+          const token = response.token;
+          const date = new Date();
+          date.setDate(date.getDate() + 30);
+          setCookie("token", token, { path: "/", expires: date });
+          navigate("/spotify");
+        }
       }
-    );
+    } catch (err) {
+      console.log("Loi: ", err)
+    }
   };
+
+  // const clientID =
+  //   "658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com";
+
+  // const onLoginSucess = async (req, res) => {
+  //   const response = await makeUnauthenticatedPOSTRequest2(
+  //     "/auth/user/google-login",
+  //     {
+  //       name: req.profilObj.givenName, // Liên kết với gg login để lấy dữ liệu
+  //       email: req.profilObj.email,
+  //       userName: req.profilObj.name,
+  //     }
+  //   );
+  // };
 
   const onFailureSucess = async (req, res) => {
     console.log("Failure: ", req);
@@ -60,24 +93,33 @@ export default function LoginPage() {
         <img className="h-[64px] " src={logoSpotify}></img>
       </header>
       <main className="my-6 justify-center items-center w-[100%]">
-        
-        <div className="my-2">
-          <GoogleLogin
+        <div
+          className="my-2"
+          onClick={() => {
+            GoogleLogin();
+          }}
+        >
+          <button
+            className="w-[320px] h-[32px] border-2 rounded-2xl hover:border-green-400 hover:scale-95"
+            // onClick={renderProps.onClick}
+            // disabled={renderProps.disabled}
+          >
+            <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center mr-2">
+                <iconify-icon icon="flat-color-icons:google"></iconify-icon>
+              </div>
+              <div>Tiếp tục bằng Google</div>
+            </div>
+          </button>
+          {/* <GoogleLogin
             clientId={clientID}
             render={(renderProps) => (
-              <button  className="font-semibold w-[320px] h-[32px] border-2 rounded-2xl hover:border-green-400 hover:scale-95"
-                onClick={renderProps.onClick}
-                disabled={renderProps.disabled}
-
-              >
-                <i class="fa-brands fa-google mr-2"></i>Tiếp tục bằng Google
-              </button>
             )}
             buttonText="Login"
             onSuccess={onLoginSucess}
             onFailure={onFailureSucess}
             cookiePolicy={"single_host_origin"}
-          />
+          /> */}
         </div>
         <div className="flex justify-center items-center my-4">
           <div className="w-[138px] h-[2px] bg-slate-500"></div>

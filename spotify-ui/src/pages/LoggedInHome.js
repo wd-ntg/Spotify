@@ -6,16 +6,25 @@ import { makeUnauthenticatedGetAllPlaylists } from "../utils/serverHelpers";
 import WindowCard from "../components/WindowCard";
 import SongCardPlaylist from "../components/SongCardPlaylist";
 
+import Loader from "../components/Loader";
+
 export default function LoggedInHome() {
   const navigate = useNavigate();
   const [playlists, setPlaylists] = useState([]);
   const [playlistsAdm, setPlaylistsAdm] = useState([]);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getDatas = async () => {
       const response = await makeUnauthenticatedGetAllPlaylists(
         "/playlists/get/genrePlaylist"
       );
+      if (!response) {
+        setLoading(true)
+      } else {
+        setLoading(false)
+      }
       setPlaylists(response.data);
     };
     getDatas();
@@ -23,6 +32,7 @@ export default function LoggedInHome() {
       const response = await makeUnauthenticatedGetAllPlaylists(
         "/playlists/get/genrePlaylistAdm"
       );
+      
       setPlaylistsAdm(response.data);
     };
     getData();
@@ -31,19 +41,23 @@ export default function LoggedInHome() {
   render.push(playlists);
   return (
     <LoggedInContainer currentActiveScreen="home">
-      <WindowCard/>
-      <SongCardPlaylist/>
-      <PlaylistView
-        titleText="Nhạc Pop"
-        cardDatas = {playlists}
-      />
-      <PlaylistView titleText="Nhạc của bạn" cardDatas={playlistsAdm} />
+      <WindowCard />
+      <SongCardPlaylist />
+      {loading ? (
+        <div className="flex justify-center items-center h-[264px]">
+          <Loader />
+        </div>
+      ) : (
+        <div>
+          <PlaylistView titleText="Nhạc Pop" cardDatas={playlists} />
+          <PlaylistView titleText="Nhạc của bạn" cardDatas={playlistsAdm} />
+        </div>
+      )}
     </LoggedInContainer>
   );
 }
 
 const PlaylistView = ({ titleText, cardDatas }) => {
-  
   return (
     <div className="text-white mt-8 px-12 text-left">
       <div className="text-2xl font-semibold mb-5">{titleText}</div>

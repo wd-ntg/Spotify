@@ -31,7 +31,6 @@ export default function SignupPage() {
       const date = new Date();
       date.setDate(date.getDate() + 30)
       setCookie("token", token, {path: "/", expires:date})
-      alert("Success")
       navigate("/spotify")
     } else {
       alert("Failure")

@@ -6,7 +6,7 @@ export const authContext = createContext();
 export const AuthContextProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState({});
 
-  console.log(currentUser)
+  // console.log(currentUser)
 
   useEffect (() => {
     const getCurrentUser = async () => {

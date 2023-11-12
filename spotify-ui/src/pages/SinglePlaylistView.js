@@ -10,12 +10,16 @@ import { Link } from "react-router-dom";
 import songContext from "../contexts/songContext";
 import { Howl } from "howler";
 
+import Loader from "../components/Loader";
+
 export default function SinglePlaylistView() {
   const { currentSong, playSound, isPaused, likedPlaylist, setLikedPlaylist } =
     useContext(songContext);
 
   const navigate = useNavigate();
   const loginNavigate = useNavigate();
+
+  const [loading, SetLoading] = useState(true);
 
   const [playlistDetails, setPlaylistDetails] = useState({});
   const [openDetailModal, setOpenDetailModal] = useState(false);
@@ -50,6 +54,11 @@ export default function SinglePlaylistView() {
       const response = await makeUnauthenticatedGetMySongRequest(
         "/playlists/get/playlist/" + playlistId
       );
+      if (!response) {
+        SetLoading(true);
+      } else {
+        SetLoading(false);
+      }
       setPlaylistDetails(response);
     };
     getData();
@@ -172,44 +181,50 @@ export default function SinglePlaylistView() {
             </div>
           </div>
         </div>
-        <div className="bg-violet-400 p-4 w-full relative">
-          <div className="flex text-left p-4 bg-violet-400 ">
-            <div>
-              <img
-                className="w-[232px] h-[232px] rounded-lg"
-                src={playlistDetails.thumbnail}
-              />
-            </div>
-            <div className="p-12 text-white">
-              <div className="text-sm font-semibold">Playlist</div>
-              <div className="text-8xl font-extrabold">
-                {playlistDetails.name}
+        {loading ? (
+          <div className="w-full flex justify-center items-center">
+            <Loader />
+          </div>
+        ) : (
+          <div className="bg-violet-400 p-4 w-full relative">
+            <div className="flex text-left p-4 bg-violet-400 ">
+              <div>
+                <img
+                  className="w-[232px] h-[232px] rounded-lg"
+                  src={playlistDetails.thumbnail}
+                />
               </div>
-              <div className="mt-4 mb-2 text-sm text-slate-300 font-medium">
-                Peaceful piano to help you slow down, breathe, and relax.
-              </div>
-              <div className="flex items-center">
-                <div className="font-semibold">
-                  <i class="fa-brands fa-spotify text-green-400"></i> Spotify
+              <div className="p-12 text-white">
+                <div className="text-sm font-semibold">Playlist</div>
+                <div className="text-8xl font-extrabold">
+                  {playlistDetails.name}
                 </div>
-                <div className="w-2 h-2 bg-white rounded-[50%] mx-2"></div>
-                <div>... Liked</div>
-                <div className="w-2 h-2 bg-white rounded-[50%] mx-2"></div>
+                <div className="mt-4 mb-2 text-sm text-slate-300 font-medium">
+                  Peaceful piano to help you slow down, breathe, and relax.
+                </div>
+                <div className="flex items-center">
+                  <div className="font-semibold">
+                    <i class="fa-brands fa-spotify text-green-400"></i> Spotify
+                  </div>
+                  <div className="w-2 h-2 bg-white rounded-[50%] mx-2"></div>
+                  <div>... Liked</div>
+                  <div className="w-2 h-2 bg-white rounded-[50%] mx-2"></div>
 
-                <div className="mr-1">{quantitySong}</div>
-                <div>
-                  Bài hát<t></t>,{" "}
+                  <div className="mr-1">{quantitySong}</div>
+                  <div>
+                    Bài hát<t></t>,{" "}
+                  </div>
+                  <div className="mx-1">{hours}</div>
+                  <div className="mr-1">giờ</div>
+                  <div className="mr-1">{minutes} </div>
+                  <div className="mr-1">phút</div>
+                  <div className="mr-1"> {seconds} </div>
+                  <div className="mr-1">giây</div>
                 </div>
-                <div className="mx-1">{hours}</div>
-                <div className="mr-1">giờ</div>
-                <div className="mr-1">{minutes} </div>
-                <div className="mr-1">phút</div>
-                <div className="mr-1"> {seconds} </div>
-                <div className="mr-1">giây</div>
               </div>
             </div>
           </div>
-        </div>
+        )}
         <div
           className={`flex items-center text-left p-6 ml-4 ${
             isSticky ? "hidden" : ""
@@ -294,21 +309,27 @@ export default function SinglePlaylistView() {
             <i class="fa-regular fa-clock"></i>
           </div>
         </div>
-        {playlistDetails._id && (
-          <div>
-            {playlistDetails.songs.map((item, index) => {
-              return (
+        {loading ? (
+          <div className="w-full flex justify-center items-center">
+            <Loader />
+          </div>
+        ) : (
+          playlistDetails._id && (
+            <div>
+              {playlistDetails.songs.map((item, index) => (
                 <SingleSongCard
                   index={index + 1}
                   info={item}
                   key={JSON.stringify(item)}
-                  playSound={() => {}}
+                  playSound={() => {
+                    /* Function to play the sound */
+                  }}
                   playlistId={item._id}
                   songTrack={item.track}
                 />
-              );
-            })}
-          </div>
+              ))}
+            </div>
+          )
         )}
       </div>
       {closeModalInfo ? (
