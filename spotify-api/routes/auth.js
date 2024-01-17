@@ -190,4 +190,32 @@ router.post("/upload_name", async (req, res) => {
   }
 });
 
+
+router.post("/upload_avatar", async (req, res) => {
+  const { email, newAvatar } = req.body;
+  console.log(req.body)
+  // const avatar = req.file; // Đổi từ req.body thành req.file để lấy thông tin file
+
+  const user = await UserModel.findOne({ email: email });
+  if (!user) {
+    return res.status(403).json({ err: "Invalid credentials" });
+  }
+
+  try {
+    const updatedUser = await UserModel.findOneAndUpdate(
+      { email: email },
+      {
+        $set: {
+          avatar: newAvatar // Lưu tên file hoặc đường dẫn của avatar trong cơ sở dữ liệu
+        },
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.log("Error: ", err);
+    res.status(500).json({ error: "Error updating avatar" });
+  }
+});
+
 module.exports = router;

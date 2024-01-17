@@ -1,4 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
+import CloudinaryUploadWidget from "../utils/CloudinaryServiceDashBoard";
+import { Cloudinary } from "@cloudinary/url-gen";
+import { AdvancedImage, responsive, placeholder } from "@cloudinary/react";
+import CloudinaryUpload from "../components/CloudinaryUpload";
 
 import NavDashboard from "../components/NavDashboard";
 import authContext from "../contexts/authContext";
@@ -23,9 +27,14 @@ function DashBoard() {
 
   const [processName, setProcessName] = useState(true)
 
+  // Cloudinary 
+
   // console.log(currentUser)
   // const file = e.target.files[0];
   // setSelectedFile(file);
+
+  const [playlistUrl, setPlaylistUrl] = useState("");
+  const [uploadSongFileName, setUploadSongFileName] = useState("");
 
   const handleFileChange2 = async (e) => {
     var reader = new FileReader();
@@ -42,24 +51,25 @@ function DashBoard() {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     setSelectedFile(file);
+
   };
 
-  const upload = async (e) => {
-    if (selectedFile) {
-      const formData = new FormData();
-      formData.append("image", selectedFile);
-      formData.append("email", currentUser.email);
-      const request = await makeUnauthenticatedPOSTRequestUpload(
-        "/auth/upload_info",
-        formData
-      );
-      if (request) {
-        setProcess(false)
-      } else {
-        setProcess(true)
-      }
-    }
-  };
+  // const upload = async (e) => {
+  //   if (selectedFile) {
+  //     const formData = new FormData();
+  //     formData.append("image", selectedFile);
+  //     formData.append("email", currentUser.email);
+  //     const request = await makeUnauthenticatedPOSTRequestUpload(
+  //       "/auth/upload_info",
+  //       formData
+  //     );
+  //     if (request) {
+  //       setProcess(false)
+  //     } else {
+  //       setProcess(true)
+  //     }
+  //   }
+  // };
 
   const handleChangeName = async (e) => {
     const request = await makeUnauthenticatedPOSTRequest2("/auth/upload_name", {
@@ -76,6 +86,39 @@ function DashBoard() {
   // if (isEditing) {
   //   setProcessName(true)
   // }
+
+  // Upload Cloud
+
+  const [publicId, setPublicId] = useState("");
+  // Replace with your own cloud name
+  const [cloudName] = useState("djfpcyyfe");
+  // Replace with your own upload preset
+  const [uploadPreset] = useState("cr2sv2gr");
+
+  const [uwConfig] = useState({
+    cloudName,
+    uploadPreset
+    // cropping: true, //add a cropping step
+    // showAdvancedOptions: true,  //add advanced options (public_id and tag)
+    // sources: [ "local", "url"], // restrict the upload sources to URL and local files
+    // multiple: false,  //restrict upload to a single file
+    // folder: "user_images", //upload files to the specified folder
+    // tags: ["users", "profile"], //add the given tags to the uploaded files
+    // context: {alt: "user_uploaded"}, //add the given context data to the uploaded files
+    // clientAllowedFormats: ["images"], //restrict uploading to image files only
+    // maxImageFileSize: 2000000,  //restrict file size to less than 2MB
+    // maxImageWidth: 2000, //Scales the image down to a width of 2000 pixels before uploading
+    // theme: "purple", //change to a purple theme
+  });
+
+  // Create a Cloudinary instance and set your cloud name.
+  const cld = new Cloudinary({
+    cloud: {
+      cloudName
+    }
+  });
+
+  const myImage = cld.image(publicId);
 
   return (
     <div>
@@ -134,7 +177,9 @@ function DashBoard() {
                       currentUser ? (
                         <img
                           className="rounded-full w-[70px] h-[70px] bg-cover ml-6"
-                          src={require(`./uploads/${currentUser?.avatar}`)}
+                          // src={currentUser.avatar ? require(`./uploads/${currentUser?.avatar}`) : currentUser.avatar}
+                          src={`${currentUser.avatar}`}
+                          // src={`https://images.pexels.com/photos/5677459/pexels-photo-5677459.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load`}
                           alt="User Avatar"
                         />
                       ) : (
@@ -176,7 +221,7 @@ function DashBoard() {
                     {/* <img src={AddAvatar} className="w-8 h-8 mr-2" alt="" /> */}
                     {!selectedFile ? (
                       <div className="text-indigo-300 flex">
-                        Thay đổi Avatar
+                        <CloudinaryUploadWidget uwConfig={uwConfig} setPublicId={setPublicId} currentUser={currentUser}/>
                       </div>
                     ) : (
                       // <div className="rounded-[50%] ml-6 p-4 border-solid border-gray-400 border-[1px] w-[80px] h-[80px] flex justify-center items-center">
@@ -188,10 +233,10 @@ function DashBoard() {
                       // </div>
                     )}
                   </label>
-                  {process ? <div
+                  {/* {process ? <div
                     className="mt-4 cursor-pointer ml-4"
                     onClick={(e) => {
-                      upload();
+                      // upload();
                     }}
                   >
                     Upload
@@ -199,7 +244,7 @@ function DashBoard() {
                     className="mt-4 cursor-pointer ml-4"
                   >
                     Hoàn thành
-                  </div>}
+                  </div>} */}
                 </div>
               </div>
             </div>
@@ -210,7 +255,11 @@ function DashBoard() {
           </main>
         </div>
       </div>
+      {/* <div>Upload</div>
+      <div className="bg-black"><CloudinaryUpload setUrl={setPlaylistUrl}
+                setName={setUploadSongFileName}></CloudinaryUpload></div> */}
     </div>
+    
   );
 }
 
