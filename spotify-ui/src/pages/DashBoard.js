@@ -211,7 +211,7 @@ function DashBoard() {
                     name="file"
                     onChange={(e) => {
                       handleFileChange(e);
-                      handleFileChange2(e);
+                      // handleFileChange2(e);
                     }}
                   />
                   <label

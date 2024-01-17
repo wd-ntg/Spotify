@@ -35,12 +35,25 @@ function CloudinaryUploadWidget({ uwConfig, setPublicId, currentUser }) {
     if (loaded) {
       var myWidget = window.cloudinary.createUploadWidget(
         uwConfig,
-        (error, result) => {
+        async (error, result) => {
           if (!error && result && result.event === "success") {
             console.log("Done! Here is the image info: ", result.info);
             setPublicId(result.info.url);
             setUrlAvatar(result.info.url);
-            
+            if (result.info.url) {
+              const request = await makeUnauthenticatedPOSTRequest2(
+                "/auth/upload_avatar",
+                {
+                  email: currentUser.email,
+                  newAvatar: result.info.url,
+                }
+              );
+              if (request) {
+                setProcess(false);
+              } else {
+                setProcess(true);
+              }
+            }
           }
         }
       );
@@ -52,20 +65,7 @@ function CloudinaryUploadWidget({ uwConfig, setPublicId, currentUser }) {
         },
         false
       );
-      if (urlAvatar) {
-        const request = await makeUnauthenticatedPOSTRequest2(
-          "/auth/upload_avatar",
-          {
-            email: currentUser.email,
-            newAvatar: urlAvatar,
-          }
-        );
-        if (request) {
-          setProcess(false);
-        } else {
-          setProcess(true);
-        }
-      }
+      
     }
   };
 
