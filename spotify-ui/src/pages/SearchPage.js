@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import LoggedInContainer from "../containers/LoggedInContainer";
 import SingleSongCard from "../components/SingleSongCard";
 import { makeUnauthenticatedGetMySongRequest } from "../utils/serverHelpers";
@@ -7,6 +7,7 @@ export default function SearchPage() {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [songData, setSongData] = useState([]);
+
 
   const searchSong = async () => {
     const response = await makeUnauthenticatedGetMySongRequest(

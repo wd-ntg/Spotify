@@ -1,13 +1,15 @@
 import "../App.css";
 import SingleSongCard from "../components/SingleSongCard";
 import { makeUnauthenticatedGetMySongRequest } from "../utils/serverHelpers";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import LoggedInContainer from "../containers/LoggedInContainer";
 import { useNavigate } from "react-router-dom";
+
 
 export default function MyMusic() {
   const navigate = useNavigate()
   const [songDatas, setSongDatas] = useState([]);
+
   useEffect(() => {
     const getDatas = async () => {
       const response = await makeUnauthenticatedGetMySongRequest(

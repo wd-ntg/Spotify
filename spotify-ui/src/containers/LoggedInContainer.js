@@ -1,4 +1,5 @@
 import "../App.css";
+import "../../src/App.css";
 import {
   useContext,
   useState,
@@ -6,6 +7,7 @@ import {
   useLayoutEffect,
   useRef,
   useParams,
+  useCallback
 } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Howl, Howler } from "howler";
@@ -17,12 +19,18 @@ import {
   makeUnauthenticatedGetMySongRequest,
   makeUnauthenticatedPOSTRequest2,
 } from "../utils/serverHelpers";
+// import AudioPlayer from "react-h5-audio-player";
+
 import AudioPlayer from "react-h5-audio-player";
 import "react-h5-audio-player/lib/styles.css";
+
 import playingcustom from "../assest/playingcustom.css";
 import { Navigate } from "react-router-dom";
 
 import authContext from "../contexts/authContext";
+
+// import AudioPlayer from "react-modern-audio-player";
+import listSongContext from "../contexts/listSongContext";
 
 export default function LoggedInContainer({
   children,
@@ -32,7 +40,6 @@ export default function LoggedInContainer({
   playlistId,
   likedSongsData,
 }) {
-
   const [loading, SetLoading] = useState(true);
 
   const [createPlaylistModalOpen, setCreatePlaylistModalOpen] = useState(false);
@@ -49,6 +56,8 @@ export default function LoggedInContainer({
 
   const loginNavigate = useNavigate();
 
+  const [checkAvatar, setCheckAvatar] = useState(false);
+
   const {
     currentSong,
     setCurrentSong,
@@ -62,113 +71,119 @@ export default function LoggedInContainer({
     setTimeSongSeek,
     volumnChange,
     setVolumnChange,
+    currentTrackTime,
+    setCurrentTrackTime,
   } = useContext(songContext);
 
-  const [timeChangeSeekSong, setTimeChangeSeekSong] = useState(timeSongSeek);
+  const { listSong, setListSong } = useContext(listSongContext);
 
-  const firstUpdate = useRef(true);
+  const audioRef = useRef(null);
 
-  const changeSong = (songSrc) => {
-    if (soundPlayed) {
-      soundPlayed.stop();
-    }
-    let sound = new Howl({
-      src: [songSrc],
-      html5: true,
-      onload: () => {
-        setInterval(() => {
-          if (soundPlayed) {
-            const time = (sound.seek() / sound.duration()) * 100;
-            setSongProgress(time);
-          }
-        }, 500);
-      },
-    });
+  // const [timeChangeSeekSong, setTimeChangeSeekSong] = useState(timeSongSeek);
 
-    if (soundPlayed) {
-      if (timeChangeSeekSong !== null) {
-        const time = (sound.seek() / sound.duration()) * 100;
-        setSongProgress(time);
-      }
-    }
-    setSoundPlayed(sound);
-    sound.play();
-    setIsPaused(false);
-  };
+  // const firstUpdate = useRef(true);
 
-  function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    const formattedMinutes = String(minutes).padStart(2, "0");
-    const formattedSeconds = String(remainingSeconds).padStart(2, "0");
-    return `${formattedMinutes}:${formattedSeconds}`;
-  }
-  useEffect(() => {
-    if (soundPlayed) {
-      const timeSong = formatTime(Math.floor(soundPlayed.duration()));
-      setTimeSongPlay(timeSong);
-      const time = (soundPlayed.seek() / soundPlayed.duration()) * 100;
-      setSongProgress(time);
-      setTimeSongSeek(formatTime(Math.floor(soundPlayed.seek())));
-    }
-  }, [songProgress]);
+  // const changeSong = (songSrc) => {
+  //   if (soundPlayed) {
+  //     soundPlayed.stop();
+  //   }
+  //   let sound = new Howl({
+  //     src: [songSrc],
+  //     html5: true,
+  //     onload: () => {
+  //       setInterval(() => {
+  //         if (soundPlayed) {
+  //           const time = (sound.seek() / sound.duration()) * 100;
+  //           setSongProgress(time);
+  //         }
+  //       }, 500);
+  //     },
+  //   });
 
-  useLayoutEffect(() => {
-    if (firstUpdate.current) {
-      firstUpdate.current = false;
-      return;
-    }
-    if (!currentSong) {
-      return;
-    }
-    changeSong(currentSong.track);
-  }, [currentSong && currentSong.track]);
+  //   if (soundPlayed) {
+  //     if (timeChangeSeekSong !== null) {
+  //       const time = (sound.seek() / sound.duration()) * 100;
+  //       setSongProgress(time);
+  //     }
+  //   }
+  //   setSoundPlayed(sound);
+  //   sound.play();
+  //   setIsPaused(false);
+  // };
 
-  const playSound = () => {
-    if (!soundPlayed) {
-      return;
-    }
-    soundPlayed.play();
-  };
+  // function formatTime(seconds) {
+  //   const minutes = Math.floor(seconds / 60);
+  //   const remainingSeconds = seconds % 60;
+  //   const formattedMinutes = String(minutes).padStart(2, "0");
+  //   const formattedSeconds = String(remainingSeconds).padStart(2, "0");
+  //   return `${formattedMinutes}:${formattedSeconds}`;
+  // }
+  // useEffect(() => {
+  //   if (soundPlayed) {
+  //     const timeSong = formatTime(Math.floor(soundPlayed.duration()));
+  //     setTimeSongPlay(timeSong);
+  //     const time = (soundPlayed.seek() / soundPlayed.duration()) * 100;
+  //     setSongProgress(time);
+  //     setTimeSongSeek(formatTime(Math.floor(soundPlayed.seek())));
+  //   }
+  // }, [songProgress]);
 
-  if (currentSong) {
-    var currentSoundPlayed = new Howl({
-      src: [currentSong.track],
-    });
-  } else {
-    var currentSoundPlayed = new Howl({
-      src: [""],
-    });
-  }
+  // useLayoutEffect(() => {
+  //   if (firstUpdate.current) {
+  //     firstUpdate.current = false;
+  //     return;
+  //   }
+  //   if (!currentSong) {
+  //     return;
+  //   }
+  //   changeSong(currentSong.track);
+  // }, [currentSong && currentSong.track]);
 
-  useEffect(() => {
-    if (soundPlayed) {
-      const seekTime = (soundPlayed.duration() / 100) * timeChangeSeekSong;
-      soundPlayed.seek(seekTime);
-    }
-  }, [timeChangeSeekSong]);
+  // const playSound = () => {
+  //   if (!soundPlayed) {
+  //     return;
+  //   }
+  //   soundPlayed.play();
+  // };
 
-  useEffect(() => {
-    if (soundPlayed) {
-      const time = (soundPlayed.seek() / soundPlayed.duration()) * 100;
-      setTimeout(() => {
-        setSongProgress(time);
-      }, 300);
-    }
-  }, [timeChangeSeekSong]);
-  const pauseSound = () => {
-    soundPlayed.pause();
-  };
+  // if (currentSong) {
+  //   var currentSoundPlayed = new Howl({
+  //     src: [currentSong.track],
+  //   });
+  // } else {
+  //   var currentSoundPlayed = new Howl({
+  //     src: [""],
+  //   });
+  // }
 
-  const togglePlayPause = () => {
-    if (isPaused) {
-      playSound();
-      setIsPaused(false);
-    } else {
-      pauseSound();
-      setIsPaused(true);
-    }
-  };
+  // useEffect(() => {
+  //   if (soundPlayed) {
+  //     const seekTime = (soundPlayed.duration() / 100) * timeChangeSeekSong;
+  //     soundPlayed.seek(seekTime);
+  //   }
+  // }, [timeChangeSeekSong]);
+
+  // useEffect(() => {
+  //   if (soundPlayed) {
+  //     const time = (soundPlayed.seek() / soundPlayed.duration()) * 100;
+  //     setTimeout(() => {
+  //       setSongProgress(time);
+  //     }, 300);
+  //   }
+  // }, [timeChangeSeekSong]);
+  // const pauseSound = () => {
+  //   soundPlayed.pause();
+  // };
+
+  // const togglePlayPause = () => {
+  //   if (isPaused) {
+  //     playSound();
+  //     setIsPaused(false);
+  //   } else {
+  //     pauseSound();
+  //     setIsPaused(true);
+  //   }
+  // };
 
   const addSongToPlaylist = async (playlistId) => {
     const songId = currentSong._id;
@@ -183,11 +198,11 @@ export default function LoggedInContainer({
   };
 
   // Thanh âm thanh
-  useEffect(() => {
-    if (soundPlayed) {
-      soundPlayed.volume(volumnChange / 100);
-    }
-  }, [volumnChange, soundPlayed]);
+  // useEffect(() => {
+  //   if (soundPlayed) {
+  //     soundPlayed.volume(volumnChange / 100);
+  //   }
+  // }, [volumnChange, soundPlayed]);
 
   // Logout
   const handleLogout = async () => {
@@ -217,24 +232,143 @@ export default function LoggedInContainer({
     }
   }, [currentSong, playlistDetails.songs]);
 
-  const handlePrevSong = () => {
-    if (currentSongIndex == 0) {
-      return;
+  // const handlePrevSong = () => {
+  //   if (currentSongIndex == 0) {
+  //     return;
+  //   } else {
+  //     setCurrentSong(playlistDetails.songs[currentSongIndex - 1]);
+  //   }
+  // };
+
+  // const handleNextSong = () => {
+  //   if (playlistDetails) {
+  //     if (currentSongIndex === playlistDetails.songs.length - 1) {
+  //       return;
+  //     } else {
+  //       setCurrentSong(playlistDetails.songs[currentSongIndex + 1]);
+  //     }
+  //   }
+  // };
+
+  const { currentUser } = useContext(authContext);
+
+  useEffect(() => {
+    if (currentUser.avatar !== "") {
+      setCheckAvatar(true);
     } else {
-      setCurrentSong(playlistDetails.songs[currentSongIndex - 1]);
+      setCheckAvatar(false);
     }
+  }, [currentUser.avatar]);
+
+  // UI For process music
+
+  // const playList = [
+  //   {
+  //     name: "name",
+  //     writer: "writer",
+  //     img: "https://res.cloudinary.com/djfpcyyfe/image/upload/v1703650874/d6orbafblulna7f4caxu.jpg",
+  //     src: "https://res.cloudinary.com/djfpcyyfe/video/upload/v1703664630/ftfaldtunrsvoztbxmow.mp3",
+  //     id: 1,
+  //   },
+  //   {
+  //     name: "name",
+  //     writer: "writer",
+  //     img: "https://res.cloudinary.com/djfpcyyfe/image/upload/v1703650874/d6orbafblulna7f4caxu.jpg",
+  //     src: "https://res.cloudinary.com/djfpcyyfe/video/upload/v1703646448/l8hkx84mbuxlcb2ol0zo.mp3",
+  //     id: 2,
+  //   },
+  // ];
+
+  // const [progressType, setProgressType] = useState("waveform");
+  // const [playerPlacement, setPlayerPlacement] = useState("static");
+
+  useEffect(() => {
+    if (playlistDetails && playlistDetails.songs) {
+      const updatedPlaylist = playlistDetails.songs.map((song, index) => {
+        return {
+          id: index,
+          artist: song.artist,
+          createAt: song.createAt,
+          gener: song.gener,
+          name: song.name,
+          thumbnail: song.thumbnail,
+          track: song.track,
+          _id: song._id,
+        };
+      });
+      setListSong(updatedPlaylist);
+    }
+  }, [playlistDetails]);
+
+  const handleListen = (e) => {
+    // Lấy ra thời gian hiện tại của bài nhạc (đơn vị là giây)
+    const currentTime = e.target.currentTime;
+    setCurrentTrackTime(currentTime);
   };
 
-  const handleNextSong = () => {
-    if (playlistDetails) {
-      if (currentSongIndex === playlistDetails.songs.length - 1) {
-        return;
-      } else {
-        setCurrentSong(playlistDetails.songs[currentSongIndex + 1]);
+  useEffect(() => {
+    const playFromMinute = () => {
+      if (audioRef.current) {
+        const targetTime = currentTrackTime + 0.6; // 1 phút
+        audioRef.current.audio.current.currentTime = targetTime;
+        audioRef.current.audio.current.play();
+      }
+    };
+
+    playFromMinute();
+  }, []);
+
+  const handleClickNext = () => {
+    if (currentSong) {
+      // Assuming listSong is an array of songs
+      const currentIndex = listSong.findIndex(
+        (song) => song._id === currentSong._id
+      );
+
+      // console.log(currentIndex);
+      // console.log(listSong[currentIndex]);
+      // console.log(currentSong._id);
+
+      if (currentIndex !== -1 && currentIndex < listSong.length - 1) {
+        const nextSong = listSong[currentIndex + 1];
+        setCurrentSong(nextSong)
+      } else if (currentIndex === listSong.length - 1) {
+        // Nếu đang ở cuối danh sách, chuyển sang bài đầu tiên
+        setCurrentSong(listSong[0]);
       }
     }
+
   };
 
+  const handleClickPrev = () => {
+    if (currentSong) {
+      // Assuming listSong is an array of songs
+      const currentIndex = listSong.findIndex(
+        (song) => song._id === currentSong._id
+      );
+
+      // console.log(currentIndex);
+      // console.log(listSong[currentIndex]);
+      // console.log(currentSong._id);
+
+      if (currentIndex !== -1 && currentIndex < listSong.length && currentIndex > 0) {
+        const nextSong = listSong[currentIndex - 1];
+        setCurrentSong(nextSong)
+      } else if (currentIndex === 0) {
+        // Nếu đang ở cuối danh sách, chuyển sang bài đầu tiên
+        setCurrentSong(listSong[listSong.length-1]);
+      }
+    }
+  }
+
+  useEffect(() => {
+    // Code inside useEffect will be executed when currentSong changes
+  }, [currentSong]);
+
+  const setCurrentSongCallback = useCallback((nextSong) => {
+    setCurrentSong(nextSong);
+  }, [setCurrentSong]);
+  
   return (
     <div
       className={`${
@@ -391,14 +525,23 @@ export default function LoggedInContainer({
                       <i class="fa-solid fa-download mr-2"></i>
                       Cài đặt ứng dụng
                     </button>
-                    <div
-                      className="border-2 rounded-[50%] text-center ml-4 w-8 h-8 flex justify-center items-center cursor-pointer z-40"
-                      onClick={() => {
-                        setCloseModalInfo(true);
-                      }}
-                    >
-                      <i class="fa-solid fa-user text-teal-50"></i>
-                    </div>
+                    {checkAvatar ? (
+                      <div
+                        className="border-2 rounded-[50%] text-center ml-4 w-8 h-8 flex justify-center items-center cursor-pointer z-40"
+                        onClick={() => {
+                          setCloseModalInfo(true);
+                        }}
+                      >
+                        <i className="fa-solid fa-user text-teal-50"></i>
+                      </div>
+                    ) : (
+                      <div className="border-2 rounded-[50%] text-center ml-4 w-8 h-8 flex justify-center items-center cursor-pointer z-40">
+                        <img
+                          className="rounded-[50%] flex justify-center items-center max-w-[24px] max-h-[24px]"
+                          src={currentUser.avatar}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -408,8 +551,119 @@ export default function LoggedInContainer({
         )}
       </div>
       {currentSong ? (
-        <div className="h-[10%] bg-black fixed bottom-0 right-0 left-0 flex  text-white justify-center items-center">
-          <div className="w-1/4 flex items-center ml-4">
+        // <div className="h-[10%] bg-black fixed bottom-0 right-0 left-0 flex  text-white justify-center items-center">
+        //   <div className="w-1/4 flex items-center ml-4">
+        //     <img
+        //       src={currentSong.thumbnail}
+        //       alt="artist"
+        //       className="h-14 w-14 rounded"
+        //     />
+        //     <div className="text-white text-left ml-4">
+        //       <div className="text-sm font-semibold mb-1">
+        //         {currentSong.name}
+        //       </div>
+        //       <div className="text-sm text-slate-500">
+        //         {currentSong.artist.userName}
+        //       </div>
+        //     </div>
+        //     <div className="text-white ml-8 flex justify-center items-center">
+        //       <i class="fa-regular fa-heart mr-4"></i>
+        //       <i class="fa-regular fa-clone"></i>
+        //     </div>
+        //   </div>
+        //   <div className="w-1/2 flex justify-center items-center flex-col">
+        //     <div className="flex justify-center items-center">
+        //       <div className="mx-4">
+        //         <i class="fa-solid fa-shuffle hover:text-white text-gray-400 cursor-pointer"></i>
+        //       </div>
+        //       <div className="mx-4">
+        //         <i
+        //           class="fa-solid fa-backward-step text-xl hover:text-white text-gray-400 cursor-pointer"
+        //           onClick={handlePrevSong}
+        //         ></i>
+        //       </div>
+        //       <div className="mx-4 w-8 h-8 border-solid border-2 border-teal-50 flex justify-center items-center rounded-full">
+        //         <i
+        //           class={
+        //             isPaused
+        //               ? `fa-solid fa-play text-center hover:text-white text-gray-400 cursor-pointer`
+        //               : `fa-solid fa-pause text-center hover:text-white text-gray-400 cursor-pointer`
+        //           }
+        //           onClick={togglePlayPause}
+        //         ></i>
+        //       </div>
+        //       <div className="mx-4">
+        //         <i
+        //           class="fa-solid fa-forward-step text-xl hover:text-white text-gray-400 cursor-pointer"
+        //           onClick={handleNextSong}
+        //         ></i>
+        //       </div>
+        //       <div>
+        //         <i class="fa-solid fa-repeat hover:text-white text-gray-400 cursor-pointer"></i>
+        //       </div>
+        //     </div>
+
+        //     <div className={`w-[80%] flex translate-x-4`}>
+        //       <div className="w-[10%]">{timeSongSeek}</div>
+        //       <div className="w-[80%]">
+        //         <input
+        //           id="progress"
+        //           class="progress"
+        //           type="range"
+        //           value={songProgress ? `${songProgress}` : `0`}
+        //           step="0.5"
+        //           min="0"
+        //           max="100"
+        //           onChange={(e) => {
+        //             setTimeChangeSeekSong(e.target.value);
+        //           }}
+        //         />
+        //       </div>
+        //       <div className="w-[10%]">{timeSongPlay}</div>
+        //     </div>
+        //   </div>
+        //   <div className="w-1/4 flex justify-center items-center">
+        //     <div
+        //       className="cursor-pointer"
+        //       onClick={() => {
+        //         setAddToPlaylistModalOpen(true);
+        //       }}
+        //     >
+        //       <iconify-icon
+        //         icon="ic:round-playlist-add"
+        //         width="28px"
+        //       ></iconify-icon>
+        //     </div>
+        //     <div className="text-lg ml-4">
+        //       <iconify-icon icon="charm:sound-up"></iconify-icon>
+        //     </div>
+        //     <div className="w-[25%] flex justify-center items-center mb-2 ml-1">
+        //       <input
+        //         id="progress"
+        //         class="progress"
+        //         type="range"
+        //         value={volumnChange ? `${volumnChange}` : `0`}
+        //         step="0.5"
+        //         min="0"
+        //         max="100"
+        //         onChange={(e) => setVolumnChange(e.target.value)}
+        //       />
+        //     </div>
+        //   </div>
+        // </div>
+        <div className="z-1000 fixed bottom-0 right-0 left-0 flex justify-between items-center bg-black">
+          {/* <AudioPlayer
+            playList={playList}
+            activeUI={{
+              all: true,
+              progress: progressType,
+            }}
+            placement={{
+              player: playerPlacement,
+            }}
+            
+          /> */}
+          <div className="flex items-center ml-4">
             <img
               src={currentSong.thumbnail}
               alt="artist"
@@ -428,84 +682,31 @@ export default function LoggedInContainer({
               <i class="fa-regular fa-clone"></i>
             </div>
           </div>
-          <div className="w-1/2 flex justify-center items-center flex-col">
-            <div className="flex justify-center items-center">
-              <div className="mx-4">
-                <i class="fa-solid fa-shuffle hover:text-white text-gray-400 cursor-pointer"></i>
-              </div>
-              <div className="mx-4">
-                <i
-                  class="fa-solid fa-backward-step text-xl hover:text-white text-gray-400 cursor-pointer"
-                  onClick={handlePrevSong}
-                ></i>
-              </div>
-              <div className="mx-4 w-8 h-8 border-solid border-2 border-teal-50 flex justify-center items-center rounded-full">
-                <i
-                  class={
-                    isPaused
-                      ? `fa-solid fa-play text-center hover:text-white text-gray-400 cursor-pointer`
-                      : `fa-solid fa-pause text-center hover:text-white text-gray-400 cursor-pointer`
-                  }
-                  onClick={togglePlayPause}
-                ></i>
-              </div>
-              <div className="mx-4">
-                <i
-                  class="fa-solid fa-forward-step text-xl hover:text-white text-gray-400 cursor-pointer"
-                  onClick={handleNextSong}
-                ></i>
-              </div>
-              <div>
-                <i class="fa-solid fa-repeat hover:text-white text-gray-400 cursor-pointer"></i>
-              </div>
-            </div>
-
-            <div className={`w-[80%] flex translate-x-4`}>
-              <div className="w-[10%]">{timeSongSeek}</div>
-              <div className="w-[80%]">
-                <input
-                  id="progress"
-                  class="progress"
-                  type="range"
-                  value={songProgress ? `${songProgress}` : `0`}
-                  step="0.5"
-                  min="0"
-                  max="100"
-                  onChange={(e) => {
-                    setTimeChangeSeekSong(e.target.value);
-                  }}
-                />
-              </div>
-              <div className="w-[10%]">{timeSongPlay}</div>
-            </div>
-          </div>
-          <div className="w-1/4 flex justify-center items-center">
-            <div
-              className="cursor-pointer"
-              onClick={() => {
-                setAddToPlaylistModalOpen(true);
-              }}
-            >
-              <iconify-icon
-                icon="ic:round-playlist-add"
-                width="28px"
-              ></iconify-icon>
-            </div>
-            <div className="text-lg ml-4">
-              <iconify-icon icon="charm:sound-up"></iconify-icon>
-            </div>
-            <div className="w-[25%] flex justify-center items-center mb-2 ml-1">
-              <input
-                id="progress"
-                class="progress"
-                type="range"
-                value={volumnChange ? `${volumnChange}` : `0`}
-                step="0.5"
-                min="0"
-                max="100"
-                onChange={(e) => setVolumnChange(e.target.value)}
-              />
-            </div>
+          <AudioPlayer
+            id="your-audio-element-id"
+            autoPlay
+            ref={audioRef}
+            src={currentSong.track}
+            onPlay={() => {}}
+            showSkipControls={true}
+            // other props here
+            showFilledProgress
+            onListen={handleListen}
+            onClickNext={(e) => {
+              handleClickNext();
+            }}
+            onClickPrevious={(e) => {handleClickPrev()}}
+          />
+          <div
+            className="cursor-pointer w-16 flex justify-center items-center text-white bg-black"
+            onClick={() => {
+              setAddToPlaylistModalOpen(true);
+            }}
+          >
+            <iconify-icon
+              icon="ic:round-playlist-add"
+              width="28px"
+            ></iconify-icon>
           </div>
         </div>
       ) : (

@@ -10,6 +10,7 @@ import LoggedInHome from "./pages/LoggedInHome";
 import UploadSong from "./pages/UploadSong";
 import MyMsic from "./pages/MyMusic";
 import songContext from "./contexts/songContext";
+import listSongContext from "./contexts/listSongContext";
 import { useState, useContext } from "react";
 import SearchPage from "./pages/SearchPage";
 import Library from "./pages/Library";
@@ -27,6 +28,10 @@ function App() {
   const [timeSongSeek, setTimeSongSeek] = useState(null)
   const [likedPlaylist, setLikedPlaylist] = useState(false)
   const [volumnChange, setVolumnChange] = useState(100)
+
+  const [currentTrackTime, setCurrentTrackTime] = useState(0)
+
+  const [listSong, setListSong] = useState(null)
 
 
   return (
@@ -49,9 +54,12 @@ function App() {
               likedPlaylist,
               setLikedPlaylist,
               volumnChange,
-              setVolumnChange
+              setVolumnChange,
+              currentTrackTime,
+              setCurrentTrackTime
             }}
           >
+            <listSongContext.Provider value={{listSong, setListSong}}>
             <Routes>
               <Route path="*" element={<Navigate to="/home" />}></Route>
               <Route path="/home" element={<LoggedInHome />}></Route>
@@ -63,6 +71,7 @@ function App() {
               <Route path="/playlists/:playlistId" element={<SinglePlaylistView />}></Route>
               <Route path="/dashboard" element={<DashBoard/>}></Route>
             </Routes>
+            </listSongContext.Provider>
           </songContext.Provider>
         ) : (
           // Login out routes

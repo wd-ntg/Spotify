@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import logoSpotify from "../assest/image/Spotify_Logo_CMYK_Green.png";
 import TextInput from "../components/TextInput";
 import { useCookies } from "react-cookie";
 import {
+  makeUnauthenticatedGetUserRequest,
   makeUnauthenticatedPOSTRequest,
   makeUnauthenticatedPOSTRequest2,
 } from "../utils/serverHelpers";
@@ -13,11 +14,14 @@ import { GoogleLogin } from "react-google-login";
 // Login in with gg
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth } from "../utils/firebase-config";
+import authContext from "../contexts/authContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userName, setUserName] = useState("");
+
+  const {currentUser, setCurrentUser} = useContext(authContext)
 
   const [cookie, setCookie] = useCookies(["token"]);
   const navigate = useNavigate();
@@ -44,16 +48,14 @@ export default function LoginPage() {
   const GoogleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, googleProvider);
+
       if (result) {
         const data = {
-          firstName: result._tokenResponse.firstName,
-          lastName: " ",
-          userName: result._tokenResponse.fullName,
           email: result._tokenResponse.email,
           password: " ",
         };
         const response = await makeUnauthenticatedPOSTRequest(
-          "/auth/register",
+          "/auth/login",
           data
         );
         if (response && !response.err) {
@@ -63,29 +65,21 @@ export default function LoginPage() {
           setCookie("token", token, { path: "/", expires: date });
           navigate("/spotify");
         }
+        getCurrentUser();
       }
     } catch (err) {
-      console.log("Loi: ", err)
+      console.error("Error during Google login:", err);
     }
   };
-
-  // const clientID =
-  //   "658977310896-knrl3gka66fldh83dao2rhgbblmd4un9.apps.googleusercontent.com";
-
-  // const onLoginSucess = async (req, res) => {
-  //   const response = await makeUnauthenticatedPOSTRequest2(
-  //     "/auth/user/google-login",
-  //     {
-  //       name: req.profilObj.givenName, // Liên kết với gg login để lấy dữ liệu
-  //       email: req.profilObj.email,
-  //       userName: req.profilObj.name,
-  //     }
-  //   );
-  // };
 
   const onFailureSucess = async (req, res) => {
     console.log("Failure: ", req);
   };
+
+  const getCurrentUser = async() => {
+    const response = await makeUnauthenticatedGetUserRequest('/auth/info');
+    setCurrentUser(response)
+  }
 
   return (
     <div className="text-center">

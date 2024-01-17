@@ -38,6 +38,18 @@ export const makeUnauthenticatedPOSTRequestUpload = async (router, formData) => 
   return formattedResponse;
 };
 
+export const makeUnauthenticatedGetUserRequest = async (router) => {
+  const token = getToken();
+  const response = await fetch(backendUrl + router, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const formattedResponse = await response.json();
+  return formattedResponse;
+}
 
 export const makeUnauthenticatedGetMySongRequest = async (router) => {
   const token = getToken();

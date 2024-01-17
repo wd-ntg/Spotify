@@ -16,7 +16,9 @@ const songContext = createContext({
     likedPlaylist: null,
     setLikedPlaylist: (likedPlaylist) => {},
     volumnChange: null,
-    setVolumnChange: (volumnChange) => {}
+    setVolumnChange: (volumnChange) => {},
+    currentTrackTime: null,
+    setCurrentTrackTime: (currentTrackTime) => {}
 })
 
 export default songContext

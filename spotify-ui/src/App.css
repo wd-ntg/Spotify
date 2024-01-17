@@ -273,3 +273,42 @@ input[type="checkbox"]:checked ~ .checkbox {
 .box_shadow-rose:hover {
   box-shadow: 1px 2px 20px -1px rgb(237, 114, 141);
 }
+
+
+/* Ui Song process  */
+#rm-audio-player {
+}
+
+#rm-waveform {
+  /* max-width: 640px; */
+}
+
+#rm-waveform wave {
+  max-height: 52px;
+  /* max-width: 640px; */
+  /* width: 640px; */
+  display: flex;
+}
+
+
+/* UI Process Music */
+
+.rhap_container {
+  height: 84px;
+  background-color: black !important;
+  display: flex;
+  width: 960px !important;
+
+}
+
+.rhap_main {
+  height: 48px;
+}
+
+.rhap_progress-section {
+  
+}
+
+.rhap_controls-section {
+  height: 24px;
+}

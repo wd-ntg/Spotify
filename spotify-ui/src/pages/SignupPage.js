@@ -8,6 +8,8 @@ import logoSpotify from "../assest/image/Spotify_Logo_CMYK_Green.png";
 import TextInput from "../components/TextInput";
 import PasswordInput from "../components/PasswordInput";
 import { makeUnauthenticatedPOSTRequest } from "../utils/serverHelpers";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../utils/firebase-config";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -37,6 +39,38 @@ export default function SignupPage() {
     }
   };
 
+  const googleProvider = new GoogleAuthProvider();
+
+
+  const GoogleRegister = async () => {
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+
+      if (result) {
+        const data = {
+          firstName: result._tokenResponse.firstName,
+          lastName: " ",
+          userName: result._tokenResponse.fullName,
+          email: result._tokenResponse.email,
+          password: " ",
+        };
+        const response = await makeUnauthenticatedPOSTRequest(
+          "/auth/register",
+          data
+        );
+        if (response && !response.err) {
+          const token = response.token;
+          const date = new Date();
+          date.setDate(date.getDate() + 30);
+          setCookie("token", token, { path: "/", expires: date });
+          navigate("/spotify");
+        }
+      }
+    } catch (err) {
+      console.error("Error during Google login:", err);
+    }
+  };
+
   return (
     <div>
       <header className="w-[100%] h-[84px] flex justify-center items-center border-b-2">
@@ -45,6 +79,35 @@ export default function SignupPage() {
       <main className="flex justify-center items-center flex-col mt-4">
         <div>
           <span className="font-semibold text-lg">Đăng ký miễn phí để bắt đầu phát nhạc</span>
+        </div>
+
+        <div
+          className="my-2"
+          onClick={() => {
+            GoogleRegister();
+          }}
+        >
+          <button
+            className="w-[320px] h-[32px] border-2 rounded-2xl hover:border-green-400 hover:scale-95"
+            // onClick={renderProps.onClick}
+            // disabled={renderProps.disabled}
+          >
+            <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center mr-2">
+                <iconify-icon icon="flat-color-icons:google"></iconify-icon>
+              </div>
+              <div>Tiếp tục bằng Google</div>
+            </div>
+          </button>
+          {/* <GoogleLogin
+            clientId={clientID}
+            render={(renderProps) => (
+            )}
+            buttonText="Login"
+            onSuccess={onLoginSucess}
+            onFailure={onFailureSucess}
+            cookiePolicy={"single_host_origin"}
+          /> */}
         </div>
         <div className="w-[324px]">
           <TextInput

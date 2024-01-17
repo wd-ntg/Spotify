@@ -13,6 +13,7 @@ router.post(
     try {
       const currentUser = req.user;
       const { name, thumbnail, songs } = req.body;
+      console.log(req.body)
       if (!name || !thumbnail || !songs) {
         return res.status(301).json({ err: "Insufficient data" });
       }
@@ -25,8 +26,8 @@ router.post(
         collaborators: [],
       };
       const playlist = await PlaylistModel.create(playlistData);
-      // return res.status(200).json(playlist);
-      return res.redirect("/library");
+      return res.status(200).json(playlist);
+      // return res.redirect("/library");
     } catch (err) {
       return res.status(500).json({ err: "Internal server error" });
     }
@@ -48,7 +49,7 @@ router.get(
         },
       });
       if (!playlist) {
-        return res.status(301).json({ err: "Invalid ID" });
+        return res.status(301).json({ err: "Invalid ID" }); 
       }
       return res.status(200).json(playlist);
     } catch (err) {
@@ -148,7 +149,7 @@ router.post(
 
 router.get("/get/genrePlaylistAdm", async (req, res) => {
   try {
-    const playlistIds = ["64aa41a330600c172fc341f3"];
+    const playlistIds = ["65a35fda92bdb7ea2c4b83a1"];
     const playlists = await PlaylistModel.find({
       _id: { $in: playlistIds },
     }).populate("collaborators");
@@ -190,8 +191,8 @@ router.get("/get/genrePlaylistAdm", async (req, res) => {
 router.get("/get/genrePlaylist", async (req, res) => {
   try {
     const playlistIds = [
-      "64a98415d730d7eefdf89b60",
-      "64aa164255eb5f06b70dab76",
+      "65a35fda92bdb7ea2c4b83a1",
+      "65a3610994eed20f13180add",
     ];
     const playlists = await PlaylistModel.find({
       _id: { $in: playlistIds },
